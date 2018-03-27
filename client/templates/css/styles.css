@@ -1,0 +1,40 @@
+header
+{
+    text-align:center;
+}
+img
+{
+    max-width: 50%;
+    height:auto;
+}
+#profile
+{
+    top:100px;
+    left:50px;
+    position:relative;
+    border-style:solid;
+    width:200px;
+    height:auto;
+    text-align:center;
+}
+#connections
+{
+    top:300px;
+    left:600px;
+    position: relative;
+    border-style:solid;
+    width: 500px;
+    text-align:center;
+}
+#list
+{
+    
+}
+#status
+{
+    
+}
+#events
+{
+    
+}
