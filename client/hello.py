@@ -6,13 +6,20 @@ from pymongo import MongoClient
 from flask_pymongo import PyMongo
 from flask_bcrypt import Bcrypt
 
+#SESSION_TYPE = 'mongodb'
+
 app = Flask(__name__)
+app.secret_key = 'mysecret'
+
+#import myapp.views
+#sess = Session()
 
 #Put app in Bcrypt wrapper so that we can hash passwords for security
 bcrypt = Bcrypt(app)
 
 app.config['MONGO_DBNAME'] = 'beammeupscotty'
 app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/beammeupscotty'
+app.config['SECRET_KEY'] = 'mysecret'
 
 mongo = PyMongo(app)
 
@@ -21,9 +28,16 @@ mongo = PyMongo(app)
 def hello():
     #check if user is logged in and send them to login page if they're not
     if 'username' in session:
-        return render_template('home.html')
+        return redirect(url_for('test'))
+        #return render_template('home.html')
         
     return render_template('login.html')
+
+#Used for testing purposes only
+@app.route('/test')
+def test():
+    if 'username' in session:
+        return "Hello " + session['username']
         
 #Accessed by adding on /add to url.  It will insert a sample user into mlab db
 @app.route('/add')
@@ -32,9 +46,20 @@ def addSiteUser():
     user.insert({'name' : 'testUserName'})
     return 'Added User!'
     
-@app.route('/login')
+@app.route('/login', methods=['POST'])
 def login():
-    return render_template('login.html')
+    users = mongo.db.siteUsers
+    loginUser = users.find_one({'name' : request.form['username']})
+    
+    if loginUser is not None:
+        if bcrypt.generate_password_hash(request.form['pass'], loginUser['password']) == loginUser['password']:
+            session['username'] = request.form['username']
+            return redirect(url_for('hello'))
+        #return 'Incorrect username/password combination'
+    
+    #once logged in, work with session cookie to have the experience of a user being logged in
+    return render_template('home.html')
+    #return render_template('login.html')
     
 #methods makes sure it accepts POST and GET request methods
 @app.route('/register', methods=['POST', 'GET'])
@@ -50,15 +75,24 @@ def register():
             users.insert({'name' : request.form['username'], 'password' : hashpass})
             #create session for newly registered user
             session['username'] = request.form['username']
-            return redirect(url_for('home.html'))
+            return redirect(url_for('test'))
             
         return 'Username already exists'
         
     #request.method is GET
     return render_template('register.html')
     
+    
+#Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
-    app.secret_key = 'mysecret'
+#    app.secret_key = 'mysecret'
+#    app.config['SESSION_TYPE'] = 'mongodb'
+    
+#    sess.init_app(app)
+    
     app.run(debug=True)
+    app.run()
     
 app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+
+#TODO: Kill session variable when app is closed or put logout feature to kill it
