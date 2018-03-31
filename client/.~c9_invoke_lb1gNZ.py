@@ -6,11 +6,18 @@ from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
 #from flask_bcrypt import bcrypt
-#Note: Do not use flask_bcrypt anymore, overwrites some of bcrypt's functions and does not allow us
-#to compare passwords on login
+
+
+#SESSION_TYPE = 'mongodb'
 
 app = Flask(__name__)
 app.secret_key = 'mysecret'
+
+#import myapp.views
+#sess = Session()
+
+#Put app in Bcrypt wrapper so that we can hash passwords for security
+#bcrypt = Bcrypt(app)
 
 app.config['MONGO_DBNAME'] = 'beammeupscotty'
 app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/beammeupscotty'
@@ -24,6 +31,7 @@ def hello():
     #check if user is logged in and send them to login page if they're not
     if 'username' in session:
         return redirect(url_for('test'))
+        #return render_template('home.html')
         
     return render_template('login.html')
 
@@ -46,13 +54,31 @@ def login():
     loginUser = users.find_one({'name' : request.form['username']})
     
     if loginUser is not None:
-        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
-
-        if isSamePassword:
-            #once logged in, work with session cookie to have the experience of a user being logged in
-            return 'You are now logged in as ' + session['username']
+        #loginUser['password']
         
+        #pwHash = bcrypt.generate_password_hash(request.form['pass']).decode('utf-8')
+        
+        ### DEBUG CODE ###
+        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
+        #pwHash2 = bcrypt.generate_password_hash(request.form['pass']).decode('utf-8')
+        #pwHash3 = bcrypt.generate_password_hash(request.form['pass']).decode('utf-8')
+        #pwHash4 = bcrypt.generate_password_hash(request.form['pass']).decode('utf-8')
+        #correctPass = bcrypt.check_password_hash(pwHash, 'a')#loginUser['password'])
+        
+        if isSamePassword:
+            return ''
+        
+        #return request.form['pass'] + "<br />" +loginUser['password']+"<br />"+pwHash + " " + pwHash2 + " " + pwHash3 + " " + pwHash4 + " " + "<br />" + str(correctPass)
+        ### END ####
+        #if correctPass is True:
+            hashpass = bcrypt.generate_password_hash(request.form['pass'].encode('utf-8'), bcr)
+        #    session['username'] = request.form['username']
+        #    return redirect(url_for('test'))
+        #return 'Incorrect username/password combination'
+    
+    #once logged in, work with session cookie to have the experience of a user being logged in
     return 'username or password incorrect'
+    #return render_template('login.html')
     
 #methods makes sure it accepts POST and GET request methods
 @app.route('/register', methods=['POST', 'GET'])
@@ -63,12 +89,12 @@ def register():
         existingUser = users.find_one({'name' : request.form['username']})
         
         if existingUser is None:
+            #based off most recent version, seems to generate salt automatically with value of 12
+            #hashpass = bcrypt.generate_password_hash(request.form['pass'])
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             users.insert({'name' : request.form['username'], 'password' : hashpass})
             #create session for newly registered user
             session['username'] = request.form['username']
-            
-            #TODO: redirect into pages where the user fills out information about them for profile
             return redirect(url_for('test'))
             
         return 'Username already exists'
@@ -79,6 +105,11 @@ def register():
     
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
+#    app.secret_key = 'mysecret'
+#    app.config['SESSION_TYPE'] = 'mongodb'
+    
+#    sess.init_app(app)
+    
     app.run(debug=True)
     app.run()
     
