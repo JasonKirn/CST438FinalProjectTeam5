@@ -21,13 +21,42 @@ mongo = PyMongo(app)
 # Host home.html as the home directory webpage (at '/').
 @app.route('/')
 def hello():
-    #check if user is logged in and send them to login page if they're not
+    #check if a user is logged in and send them to login page if they're not
     if 'username' in session:
         return redirect(url_for('test'))
         
     return render_template('login.html')
 
-#Used for testing purposes only
+@app.route('/home')
+def home():
+    return "This is the home page"
+    
+@app.route('/logout')
+def logout():
+    session.clear()
+    return render_template('login.html')
+
+#endpoint for userprofile, siteUser must be a user in the db for it to work.
+@app.route('/users/<siteUser>')
+def user(siteUser):
+    #check if a user is logged in, if not they can't view a profile and are sent to login
+    if 'username' not in session:
+        return render_template('login.html')
+    
+    users = mongo.db.siteUsers
+    userBeingViewed = users.find_one({'name' : siteUser})
+    
+    if userBeingViewed is not None:
+        posts = [
+            {'author' : siteUser, 'body': 'Test post #1'}    
+        ]
+        return render_template('user.html', userBeingViewed=userBeingViewed, posts=posts )
+        #return statement works, return a template now
+        #return "This is the userpage of " + siteUser
+
+    return "Uh oh. The user page you're looking for doesn't seem to exist."
+
+#Used for testing purposes only, edit it if you'd like for further testing
 @app.route('/test')
 def test():
     if 'username' in session:
@@ -50,6 +79,7 @@ def login():
 
         if isSamePassword:
             #once logged in, work with session cookie to have the experience of a user being logged in
+            session['username'] = request.form['username']
             return 'You are now logged in as ' + session['username']
         
     return 'username or password incorrect'
@@ -69,7 +99,8 @@ def register():
             session['username'] = request.form['username']
             
             #TODO: redirect into pages where the user fills out information about them for profile
-            return redirect(url_for('test'))
+            #return redirect(url_for('test'))
+            return render_template('createProfile.html')
             
         return 'Username already exists'
         
