@@ -1,0 +1,75 @@
+<html>
+
+<head>
+    <meta charset- "utf-8"/>
+</head>
+
+<body>
+    <form method=POST action="{{ url_for('editprofile') }}">
+        <fieldset>
+            <legend>Edit Your Profile</legend>
+            Select a character: <select id="profileCharacter" onChange="swapImage()">
+                    <option value = "{{url_for('static',filename ='default.png')}}"> Select One </option>
+                    <option value = "{{url_for('static',filename ='asuna.jpeg')}}"> Asuna</option>
+                    <option value = "{{url_for('static',filename ='batman.png')}}"> Batman</option>
+                    <option value = "{{url_for('static',filename ='blackwidow.png')}}"> Black Widow</option>
+                    <option value = "{{url_for('static',filename ='cersei.jpg')}}"> Cersei Lannister</option>
+                    <option value = "{{url_for('static',filename ='daenerys.jpg')}}"> Daenerys Targaryen</option>
+                    <option value = "{{url_for('static',filename ='galadriel.png')}}"> Galadriel</option>
+                    <option value = "{{url_for('static',filename ='gandalf.jpg')}}"> Gandalf</option>
+                    <option value = "{{url_for('static',filename ='goku.png')}}"> Goku</option>
+                    <option value = "{{url_for('static',filename ='hermione.jpg')}}"> Hermione</option>
+                    <option value = "{{url_for('static',filename ='kakashi.jpg')}}"> Kakashi</option>
+                    <option value = "{{url_for('static',filename ='kirk.png')}}"> Kirk</option>
+                    <option value = "{{url_for('static',filename ='leia.png')}}"> Leia</option>
+                    <option value = "{{url_for('static',filename ='link.png')}}"> Link</option>
+                    <option value = "{{url_for('static',filename ='luffy.png')}}"> Luffy</option>
+                    <option value = "{{url_for('static',filename ='mario.png')}}"> Mario</option>
+                    <option value = "{{url_for('static',filename ='peach.jpeg')}}"> Princess Peach</option>
+                    <option value = "{{url_for('static',filename ='spiderman.png')}}"> Spider-Man</option>
+                    <option value = "{{url_for('static',filename ='spock.jpg')}}"> Spock</option>
+                    <option value = "{{url_for('static',filename ='tracer.jpg')}}"> Tracer</option>
+                    <option value = "{{url_for('static',filename ='vader.jpeg')}}"> Vader</option>
+                    <option value = "{{url_for('static',filename ='wonder_woman.png')}}"> Wonder Woman</option>
+                    <option value = "{{url_for('static',filename ='yoda.png')}}"> Yoda</option>
+                    <option value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
+                </select> <br/>
+            <br>
+            <img id="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
+            <!-- TODO: Some call to get the names of characters from that genre -->
+            
+            <script type="text/javascript">
+                function swapImage() {
+                    var image = document.getElementById("profilePicture");
+                    var character = document.getElementById("profileCharacter");
+                    image.src = character.value;
+                };
+            </script>
+            
+            <br><br> Write a profile description
+            <br>
+            
+            <div class="form-group">
+                <textarea class="form-control" name="profileDescription" rows="5" cols="50" id="description" placeholder="ProfileDescriptionTextArea"></textarea>
+            </div>
+            
+            <br><br> Select some of your interests:
+            <br>
+            <div class="form-group">
+                <input type="checkbox" class="form-control" name="interest1" value="red" placeholder="Interest1" checked> Red<br>
+                <input type="checkbox" class="form-control" name="interest2" value="green" placeholder="Interest2"> Green<br>
+                <input type="checkbox" class="form-control" name="interest3" value="blue" placeholder="Interest3"> Blue<br>
+                <input type="checkbox" class="form-control" name="interest4" value="yellow" placeholder="Interest4"> Yellow
+            </div>
+            <br><br>
+            <div class="form-group">
+                Custom Interest:
+                <input type="text" class="form-control" name="customInterest" >
+            </div>
+        </fieldset>
+        <button type="submit" class="btn btn-primary btn-block">Continue</button>
+    </form>
+
+</body>
+
+</html>

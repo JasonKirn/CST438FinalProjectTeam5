@@ -1,0 +1,39 @@
+{% include "dashboard.html" %}
+<html>
+<a href="{{ url_for('editprofile') }}">Edit Profile</a>
+
+<body>
+
+    <h1>User: {{ user.name }}</h1>
+    <hr> {% for post in posts %}
+    <p>
+        {{ user.name }} says: <b>{{ post.body }}</b>
+    </p>
+    <script>
+        function ShowHide(buttonId) {
+            var hideBtn, showBtn;
+            if (buttonId == 'button1') {
+                showBtn = 'button2';
+                hideBtn = 'button1';
+                document.getElementById("Interests").innerHTML = "block";
+            }
+            else {
+                showBtn = 'button1';
+                hideBtn = 'button2';
+                document.getElementById("Interests").innerHTML = '';
+
+            }
+            document.getElementById(hideBtn).style.display = 'none';
+            document.getElementById(showBtn).style.display = '';
+        }
+    </script>
+    <button id="button1" onclick="ShowHide('button1');" class="sideviewtoggle myButton">Show Interests</button>
+    <button id="button2" onclick="ShowHide('button2');" class="sideviewtoggle myButton" style='display:none;'>Hide Interests</button>
+    <div id= "Interests">
+    </div>
+
+
+</body>
+
+</html>
+{% endfor %}
