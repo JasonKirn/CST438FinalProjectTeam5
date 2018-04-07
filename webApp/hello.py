@@ -27,7 +27,7 @@ def hello():
     #but currently just logs out for faster testing, changing later
     #if it doesn't redirect to logout, the login state will be persistent
     if 'username' in session:
-        return redirect(url_for('logout'))
+        return redirect(url_for('home'))
         
     return render_template('login.html')
 
@@ -43,10 +43,26 @@ def friendrequest():
     return ""
     
 #Currently making endpoint to test adding friends to a user
-@app.route('/friends')
-def friend():
-    return "random friend added to current user in session"
+@app.route('/addfriend')
+def addfriend():
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
     
+    for x in range(1, 11):
+        friendString = 'friend' + str(x)
+        #friend(x) slot is found, keep looking for new friend slot
+        #Note: This syntax must be used to check over nonexistant dict's, otherwise keyError
+        if friendString in user:
+            continue
+        #friend(x) is not found, add new friend(x)
+        else:
+            users.update(
+                {'name' : session['username'] },
+                { '$set' : { friendString : 'newFriend' } }
+            )
+            return "New friend slot added, you currently have " + str(x) + " friends" 
+    
+    return "10 friends already added"
     
 
 @app.route('/home')
@@ -124,6 +140,36 @@ def register():
             users.insert({'name' : request.form['username'], 'password' : hashpass})
             #create session for newly registered user
             session['username'] = request.form['username']
+            
+            #set the user's 10 friendslots to null once their account is created
+            #users.update(
+            #    { 'name': session['username'] },
+            #    { '$push': { 'friends' : {
+            #        'friend1' : '',
+            #        'friend2' : '',
+            #        'friend3' : '',
+            #        'friend4' : '',
+            #        'friend5' : '',
+            #        'friend6' : '',
+            #        'friend7' : '',
+            #        'friend8' : '',
+            #        'friend9' : '',
+            #        'friend10' : ''}}}
+            #)
+            users.update(
+                { 'name': session['username'] },
+                { '$set' : { 'friend1' : 'testFriend', 'friend2' : '' } }
+            )
+            #users.update(
+            #    { 'name': session['username'] },
+            #    { '$push': { 'friends' : { '$each': ['testFriend1', '', '', '', '', '', '', '', '', ''] }}}
+            #)
+            
+            
+            #users.update(
+            #   { 'name': session['username'] },
+            #   { '$push': { 'scores': { '$each': [ 90, 92, 85 ] } } }
+            #)
             
             return redirect(url_for('editprofile'))
             
