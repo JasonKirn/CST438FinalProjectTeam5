@@ -138,6 +138,8 @@ def editprofile():
         #1. request.form.get is needed for optional form fields
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
+        
+        
         users.update(
             { 'name': session['username'] },
             { '$set': { 'colorInterests' : {

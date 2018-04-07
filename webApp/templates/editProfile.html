@@ -35,14 +35,14 @@
                     <option value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
                 </select> <br/>
             <br>
-            <img id="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
+            <img id="profilePicture" name = "profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
             <!-- TODO: Some call to get the names of characters from that genre -->
             
             <script type="text/javascript">
                 function swapImage() {
-                    var image = document.getElementById("profilePicture");
-                    var character = document.getElementById("profileCharacter");
-                    image.src = character.value;
+                    var image = document.getElementById("profilePicture"); //This element is where the image will be displayed
+                    var character = document.getElementById("profileCharacter"); //This element is the character image that will be displayed.
+                    image.src = character.value; //character.value is the image name to i.e. 'yoda.png'
                 };
             </script>
             
