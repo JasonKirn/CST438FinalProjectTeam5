@@ -38,7 +38,14 @@ def admin():
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
     
-  
+@app.route('/friendrequests')
+def friendrequest():
+    return ""
+    
+#Currently making endpoint to test adding friends to a user
+@app.route('/friends')
+def friend():
+    return "random friend added to current user in session"
     
     
 
