@@ -43,10 +43,13 @@ def friendrequest():
     return ""
     
 #Currently making endpoint to test adding friends to a user
-@app.route('/addfriend')
-def addfriend():
+@app.route('/addfriend/<userToAdd>')
+def addfriend(userToAdd):
     users = mongo.db.siteUsers
     user = users.find_one({'name' : session['username']})
+    
+    #if userToAdd is not None:
+    #    return "This is the username: " + userToAdd
     
     for x in range(1, 11):
         friendString = 'friend' + str(x)
@@ -58,9 +61,9 @@ def addfriend():
         else:
             users.update(
                 {'name' : session['username'] },
-                { '$set' : { friendString : 'newFriend' } }
+                { '$set' : { friendString : userToAdd } }
             )
-            return "New friend slot added, you currently have " + str(x) + " friends" 
+            return "New friend " + userToAdd + " added, you (" + session['username'] + ") currently have " + str(x) + " friends" 
     
     return "10 friends already added"
     
@@ -83,6 +86,7 @@ def user(siteUser):
     
     users = mongo.db.siteUsers
     user = users.find_one({'name' : siteUser})
+    sessionUser = session['username']
     
     if user is not None:
         posts = [
@@ -90,7 +94,11 @@ def user(siteUser):
         ]
         #TODO: Figure out why user variable won't show up on user.html even though it's passed
         #and used in the same way it is used in the tutorial.
-        return render_template('user.html', user=user, posts=posts )
+        #return siteUser + "   " + sessionUser
+        if siteUser == sessionUser:
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
+        else:
+            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
         #return statement works, return a template now
         #return "This is the userpage of " + siteUser
 
@@ -158,7 +166,7 @@ def register():
             #)
             users.update(
                 { 'name': session['username'] },
-                { '$set' : { 'friend1' : 'testFriend', 'friend2' : '' } }
+                { '$set' : { 'friend1' : 'dog', 'friend2' : 'fish', 'friend3' : 'duck' } }
             )
             #users.update(
             #    { 'name': session['username'] },
