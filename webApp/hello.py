@@ -38,10 +38,11 @@ def admin():
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
     
-@app.route('/friendrequests')
-def friendrequest():
-    return ""
+#@app.route('/friendrequests')
+#def friendrequest():
+#    return ""
     
+#Deals with friend requests and status updates
 @app.route('/notifications')
 def notifications():
     
@@ -222,11 +223,10 @@ def editprofile():
         
         users.update(
             { 'name': session['username'] },
-            { '$set': { 'colorInterests' : {
-                'interest1' : request.form.get('interest1'),
+            { '$set': {'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}}#,
+                'interest4' : request.form.get('interest4')}}#,
             #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
         )
         
