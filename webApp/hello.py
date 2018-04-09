@@ -42,12 +42,17 @@ def admin():
 def friendrequest():
     return ""
     
+@app.route('/notifications')
+def notifications():
+    
+    return "";
+    
 #Currently making endpoint to test adding friends to a user
 @app.route('/addfriend/<userToAdd>')
 def addfriend(userToAdd):
     users = mongo.db.siteUsers
     user = users.find_one({'name' : session['username']})
-    
+    otherUser = users.find_one({'name' : userToAdd })
     #if userToAdd is not None:
     #    return "This is the username: " + userToAdd
     
@@ -59,11 +64,25 @@ def addfriend(userToAdd):
             continue
         #friend(x) is not found, add new friend(x)
         else:
-            users.update(
-                {'name' : session['username'] },
-                { '$set' : { friendString : userToAdd } }
-            )
-            return "New friend " + userToAdd + " added, you (" + session['username'] + ") currently have " + str(x) + " friends" 
+            #Use this code for when a user accepts the friend request
+            #users.update(
+            #    { 'name' : session['username'] },
+            #    { '$set' : { friendString : userToAdd } }
+            #)
+            for y in range(1, 11):
+                notificationString = 'notification' + str(y)
+                if notificationString in otherUser:
+                    continue
+                else:
+                    notificationMessage = "Friend request from " + session['username']
+                    users.update(
+                        { 'name' : userToAdd },
+                        { '$set' : { notificationString : notificationMessage } }
+                    )
+                    break;
+                
+            return "Friend request sent to " + userToAdd;
+            #return "New friend " + userToAdd + " added, you (" + session['username'] + ") currently have " + str(x) + " friends" 
     
     return "10 friends already added"
     
