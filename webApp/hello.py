@@ -43,7 +43,15 @@ def admin():
 @app.route('/friendrequests')
 def friendrequest():
     return ""
-    
+
+@app.route('/acceptrequest')
+def acceptrequest():
+    return ""
+
+@app.route('/declinerequest')
+def declinerequest():
+    return ""
+
 #Deals with friend requests and status update notifications
 @app.route('/notifications')
 def notifications():
@@ -62,15 +70,18 @@ def notifications():
         #return notificationString
         #build array of notifications    
         if notificationString in user:
-            notificationArray[x-1] = user[notificationString]
+            notificationArray[x-1] = notificationString
+            #user[notificationString]
         else:
-            break;
+            continue;
     
     #return/print the prebuilt list
     beep = notificationArray[1];
     #return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
 
-    return render_template('notifications.html', notificationArray=notificationArray);
+    #notificationCount = len(notificationArray)
+
+    return render_template('notifications.html', user=user, notificationArray=notificationArray);
     
 #Currently making endpoint to test adding friends to a user
 @app.route('/addfriend/<userToAdd>')

@@ -1,14 +1,19 @@
 {% include "dashboard.html" %}
 <!DOCTYPE html>
 <html>
-    <head>
-        <h1>Notifications:</h1>
-    </head>
     <body>
-        <br>
+    <h1>Friend Requests: {{user.notification1}}</h1>
         <ul>
+            {% if user.notification11 is Null %}
+                <li>test</li>
+            {% endif %}
+            <!--always loops 10 times-->
             {% for notification in notificationArray %}
-                <li>{{ notification|e }}</li>
+            <!--                                                            If can't figure out join, then unwind loop
+                <li>{{ notification|e }}</li><li>{{loop.index}}</li><li>{{user.notification|join(loop.index)}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest') }}';">Decline</button>
+            -->
             {% endfor %}
         </ul>
 
