@@ -91,6 +91,47 @@ def addfriend(userToAdd):
     otherUser = users.find_one({'name' : userToAdd })
     #if userToAdd is not None:
     #    return "This is the username: " + userToAdd
+
+    fullUserFriendList = False
+
+    #check session user friend slots
+    for x in range(1, 11):
+        friendString = 'friend' + str(x)
+        
+        if user[friendString] == '':
+            fullUserFriendList = False
+            break;
+        else:
+            fullUserFriendList = True
+    
+    if fullUserFriendList == True:
+        return "Cannot send request to " + userToAdd + ". Your friend list is full"
+    
+    for x in range(1, 11):
+        friendString = 'friend' + str(x)
+        
+        #checking if their friend list has open slots
+        if otherUser[friendString] == '':
+            for y in range(1, 11):
+                notificationString = 'notification' + str(y)
+        
+                #found open notification slot
+                if otherUser[notificationString] == '':
+                    notificationMessage = "Friend request from " + session['username']
+                    users.update(
+                        { 'name' : userToAdd },
+                        { '$set' : { notificationString : notificationMessage } }
+                    )
+                    break
+                else:
+                    continue
+        
+                return ""
+        else:
+            continue
+        
+    return "The user you're trying to add has a full friend list"
+        
     
     for x in range(1, 11):
         friendString = 'friend' + str(x)
@@ -204,25 +245,37 @@ def register():
             #create session for newly registered user
             session['username'] = request.form['username']
             
-            #set the user's 10 friendslots to null once their account is created
-            #users.update(
-            #    { 'name': session['username'] },
-            #    { '$push': { 'friends' : {
-            #        'friend1' : '',
-            #        'friend2' : '',
-            #        'friend3' : '',
-            #        'friend4' : '',
-            #        'friend5' : '',
-            #        'friend6' : '',
-            #        'friend7' : '',
-            #        'friend8' : '',
-            #        'friend9' : '',
-            #        'friend10' : ''}}}
-            #)
             users.update(
                 { 'name': session['username'] },
-                { '$set' : { 'friend1' : 'dog', 'friend2' : 'fish', 'friend3' : 'duck' } }
+                { '$set' : { 
+                    'friend1' : 'dog', 
+                    'friend2' : 'fish',
+                    'friend3' : 'duck',
+                    'friend4' : '',
+                    'friend5' : '',
+                    'friend6' : '',
+                    'friend7' : '',
+                    'friend8' : '',
+                    'friend9' : '',
+                    'friend10' : '' } }
             )
+            
+            users.update(
+                { 'name' : session['username'] },
+                { '$set' : { 
+                    'notification1' : 'I am notification 1',
+                    'notification2' : 'I am notification 2',
+                    'notification3' : '',
+                    'notification4' : '',
+                    'notification5' : '',
+                    'notification6' : '',
+                    'notification7' : '',
+                    'notification8' : '',
+                    'notification9' : '',
+                    'notification10' : ''} }
+            )
+            
+            
             #users.update(
             #    { 'name': session['username'] },
             #    { '$push': { 'friends' : { '$each': ['testFriend1', '', '', '', '', '', '', '', '', ''] }}}
