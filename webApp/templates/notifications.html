@@ -1,0 +1,16 @@
+{% include "dashboard.html" %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <h1>Notifications:</h1>
+    </head>
+    <body>
+        <br>
+        <ul>
+            {% for notification in notificationArray %}
+                <li>{{ notification|e }}</li>
+            {% endfor %}
+        </ul>
+
+    </body>
+</html>

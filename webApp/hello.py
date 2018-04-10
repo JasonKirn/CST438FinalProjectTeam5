@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import pprint
 import pymongo
@@ -37,16 +38,39 @@ def admin():
     if 'username' in session:
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
+
+#deals with the actual transaction of adding a friend
+@app.route('/friendrequests')
+def friendrequest():
+    return ""
     
-#@app.route('/friendrequests')
-#def friendrequest():
-#    return ""
-    
-#Deals with friend requests and status updates
+#Deals with friend requests and status update notifications
 @app.route('/notifications')
 def notifications():
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    #MAY NEED AJAX HERE DUE TO ASYNCH?
     
-    return "";
+    #create empty array of 10 slots for notifications
+    notificationArray = [None] * 10
+    
+    #return user['notification1']
+    
+    #grab all notifications for current user
+    for x in range(1, 11):
+        notificationString = 'notification' + str(x)
+        #return notificationString
+        #build array of notifications    
+        if notificationString in user:
+            notificationArray[x-1] = user[notificationString]
+        else:
+            break;
+    
+    #return/print the prebuilt list
+    beep = notificationArray[1];
+    #return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
+
+    return render_template('notifications.html', notificationArray=notificationArray);
     
 #Currently making endpoint to test adding friends to a user
 @app.route('/addfriend/<userToAdd>')
@@ -274,7 +298,6 @@ def getcookie():
 
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
-    app.run(debug=True)
-    app.run()
+    app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
+    #app.run()
     
-app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
