@@ -4,12 +4,12 @@
     <body>
     <h1>Friend Requests: {{user.notification1}}</h1>
         <ul>
-            {% if user.notification11 is Null %}
+            {% if user.notification4 == "" %}
                 <li>test</li>
             {% endif %}
             <!--always loops 10 times-->
             {% for notification in notificationArray %}
-            <!--                                                            If can't figure out join, then unwind loop
+            <!--                  If can't figure out join, then unwind loop
                 <li>{{ notification|e }}</li><li>{{loop.index}}</li><li>{{user.notification|join(loop.index)}}</li>
                 <button type="button" onclick="window.location.href='{{ url_for('acceptrequest') }}';">Accept</button>
                 <button type="button" onclick="window.location.href='{{ url_for('declinerequest') }}';">Decline</button>

@@ -89,11 +89,11 @@ def addfriend(userToAdd):
     users = mongo.db.siteUsers
     user = users.find_one({'name' : session['username']})
     otherUser = users.find_one({'name' : userToAdd })
-    #if userToAdd is not None:
-    #    return "This is the username: " + userToAdd
 
     fullUserFriendList = False
-
+    fullOtherUserFriendList = False
+    fullNotificationList = False
+    
     #check session user friend slots
     for x in range(1, 11):
         friendString = 'friend' + str(x)
@@ -105,64 +105,37 @@ def addfriend(userToAdd):
             fullUserFriendList = True
     
     if fullUserFriendList == True:
-        return "Cannot send request to " + userToAdd + ". Your friend list is full"
+        return "Cannot send request to " + userToAdd + ". Your friend list is full."
     
+    #checking if their friend list has open slots
     for x in range(1, 11):
         friendString = 'friend' + str(x)
         
-        #checking if their friend list has open slots
         if otherUser[friendString] == '':
-            for y in range(1, 11):
-                notificationString = 'notification' + str(y)
-        
-                #found open notification slot
-                if otherUser[notificationString] == '':
-                    notificationMessage = "Friend request from " + session['username']
-                    users.update(
-                        { 'name' : userToAdd },
-                        { '$set' : { notificationString : notificationMessage } }
-                    )
-                    break
-                else:
-                    continue
-        
-                return ""
+            fullOtherUserFriendList = False
+            break;
         else:
-            continue
+            fullOtherUserFriendList = True
+            
+    if fullOtherUserFriendList == True:
+        return "Cannot send request to " + userToAdd + ". Their friend list is full."
         
-    return "The user you're trying to add has a full friend list"
         
-    
     for x in range(1, 11):
-        friendString = 'friend' + str(x)
-        #friend(x) slot is found, keep looking for new friend slot
-        #Note: This syntax must be used to check over nonexistant dict's, otherwise keyError
-        if friendString in user:
-            continue
-        #friend(x) is not found, add new friend(x)
+        notificationString = 'notification' + str(x)
+        
+        if otherUser[notificationString] == '':
+            notificationMessage = "Friend request from " + session['username']
+            users.update(
+                { 'name' : userToAdd },
+                { '$set' : { notificationString : notificationMessage } }
+            )
+            return "Friend request sent to " + userToAdd
         else:
-            #Use this code for when a user accepts the friend request
-            #users.update(
-            #    { 'name' : session['username'] },
-            #    { '$set' : { friendString : userToAdd } }
-            #)
-            for y in range(1, 11):
-                notificationString = 'notification' + str(y)
-                if notificationString in otherUser:
-                    continue
-                else:
-                    notificationMessage = "Friend request from " + session['username']
-                    users.update(
-                        { 'name' : userToAdd },
-                        { '$set' : { notificationString : notificationMessage } }
-                    )
-                    break;
-                
-            return "Friend request sent to " + userToAdd;
-            #return "New friend " + userToAdd + " added, you (" + session['username'] + ") currently have " + str(x) + " friends" 
-    
-    return "10 friends already added"
-    
+            fullNotificationList = True
+        
+        
+    return "There was an error in adding the other user"
 
 @app.route('/home')
 def home():
