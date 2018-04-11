@@ -44,13 +44,22 @@ def admin():
 def friendrequest():
     return ""
 
-@app.route('/acceptrequest')
-def acceptrequest():
-    return ""
+@app.route('/acceptrequest/<notification>')
+def acceptrequest(notification):
+    
+    return notification
 
-@app.route('/declinerequest')
-def declinerequest():
-    return ""
+@app.route('/declinerequest/<notification>')
+def declinerequest(notification):
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    
+    users.update(
+        { 'name' : session['username'] },
+        { '$set' : { notification : "" } }
+    )
+    
+    return redirect(url_for('notifications'))
 
 #Deals with friend requests and status update notifications
 @app.route('/notifications')
@@ -172,6 +181,14 @@ def user(siteUser):
         #return "This is the userpage of " + siteUser
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
+
+@app.route('/testPost', methods=['POST', 'GET'])
+def testPost():
+    if request.method == 'POST':
+        return request.form['value']
+        
+    return "You shouldn't be here :eyes:"
+    
 
 #Used for testing purposes only, edit it if you'd like for further testing
 @app.route('/test')
