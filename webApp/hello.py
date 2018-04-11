@@ -46,14 +46,66 @@ def friendrequest():
 
 @app.route('/acceptrequest/<notification>')
 def acceptrequest(notification):
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
     
-    return notification
+    notificationString = user[notification]
+    otherUserName = notificationString[20:len(notificationString)]
+    
+    otherUser = users.find_one({'name' : otherUserName})
+
+    otherUserFullFriendList = False
+    otherUserFriendSlot = ""
+    
+    for x in range(1, 11):
+        friendString = 'friend' + str(x)
+        
+        if user[friendString] == '':
+            otherUserFullFriendList = False
+            otherUserFriendSlot = friendString
+            break
+        else:
+            otherUserFullFriendList = True
+            
+    if otherUserFullFriendList == True:
+        return "Cannot add friend." + otherUserName + "'s friend list is full."
+        
+    userFullFriendList = False
+    userFriendSlot = ""
+        
+    for y in range(1, 11):
+        friendString = 'friend' + str(y)
+        
+        if otherUser[friendString] == '':
+            userFullFriendList = False
+            userFriendSlot = friendString
+            break
+        else:
+            userFullFriendList = True
+    
+    if userFullFriendList == True:
+        return "Cannot add friend. Your friend list is full."
+        
+    users.update(
+        { 'name' : session['username'] },
+        { '$set' : {
+            notification : "",
+            userFriendSlot : otherUserName } }
+    )    
+    
+    users.update(
+        { 'name' : otherUserName },
+        { '$set' : { otherUserFriendSlot : session['username'] } }
+    )
+    
+    #return notification[4:len(notification)]
+    
+    return redirect(url_for('notifications'))
 
 @app.route('/declinerequest/<notification>')
 def declinerequest(notification):
     users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-    
+
     users.update(
         { 'name' : session['username'] },
         { '$set' : { notification : "" } }
