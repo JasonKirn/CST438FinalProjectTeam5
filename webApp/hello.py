@@ -39,10 +39,12 @@ def admin():
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
 
-#deals with the actual transaction of adding a friend
-@app.route('/friendrequests')
-def friendrequest():
-    return ""
+@app.route('/friendlist')
+def friendlist():
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+
+    return render_template('friendList.html', user=user);
 
 @app.route('/acceptrequest/<notification>')
 def acceptrequest(notification):
@@ -118,31 +120,8 @@ def declinerequest(notification):
 def notifications():
     users = mongo.db.siteUsers
     user = users.find_one({'name' : session['username']})
-    #MAY NEED AJAX HERE DUE TO ASYNCH?
-    
-    #create empty array of 10 slots for notifications
-    notificationArray = [None] * 10
-    
-    #return user['notification1']
-    
-    #grab all notifications for current user
-    for x in range(1, 11):
-        notificationString = 'notification' + str(x)
-        #return notificationString
-        #build array of notifications    
-        if notificationString in user:
-            notificationArray[x-1] = notificationString
-            #user[notificationString]
-        else:
-            continue;
-    
-    #return/print the prebuilt list
-    beep = notificationArray[1];
-    #return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
 
-    #notificationCount = len(notificationArray)
-
-    return render_template('notifications.html', user=user, notificationArray=notificationArray);
+    return render_template('notifications.html', user=user);
     
 #Currently making endpoint to test adding friends to a user
 @app.route('/addfriend/<userToAdd>')
