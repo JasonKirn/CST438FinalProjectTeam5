@@ -6,9 +6,6 @@ from flask import Flask, render_template, url_for, request, session, redirect, m
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
-#from flask_bcrypt import bcrypt
-#Note: Do not use flask_bcrypt anymore, overwrites some of bcrypt's functions and does not allow us
-#to compare passwords on login
 
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
@@ -31,13 +28,6 @@ def hello():
         return redirect(url_for('home'))
         
     return render_template('login.html')
-
-# Admin login will be used for going to admin page for checking logs.
-@app.route('/adminLogin')
-def admin():
-    if 'username' in session:
-        return redirect(url_for('home'))
-    admin = mongo.db.siteAdmin
 
 @app.route('/friendlist')
 def friendlist():
@@ -100,8 +90,6 @@ def acceptrequest(notification):
         { '$set' : { otherUserFriendSlot : session['username'] } }
     )
     
-    #return notification[4:len(notification)]
-    
     return redirect(url_for('notifications'))
 
 @app.route('/declinerequest/<notification>')
@@ -160,7 +148,6 @@ def addfriend(userToAdd):
     if fullOtherUserFriendList == True:
         return "Cannot send request to " + userToAdd + ". Their friend list is full."
         
-        
     for x in range(1, 11):
         notificationString = 'notification' + str(x)
         
@@ -173,7 +160,6 @@ def addfriend(userToAdd):
             return "Friend request sent to " + userToAdd
         else:
             fullNotificationList = True
-        
         
     return "There was an error in adding the other user"
 
@@ -201,15 +187,11 @@ def user(siteUser):
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
-        #TODO: Figure out why user variable won't show up on user.html even though it's passed
-        #and used in the same way it is used in the tutorial.
-        #return siteUser + "   " + sessionUser
+
         if siteUser == sessionUser:
             return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
         else:
             return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
-        #return statement works, return a template now
-        #return "This is the userpage of " + siteUser
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
@@ -220,7 +202,6 @@ def testPost():
         
     return "You shouldn't be here :eyes:"
     
-
 #Used for testing purposes only, edit it if you'd like for further testing
 @app.route('/test')
 def test():
@@ -245,7 +226,6 @@ def login():
         isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
 
         if isSamePassword:
-            #once logged in, work with session cookie to have the experience of a user being logged in
             session['username'] = request.form['username']
             return redirect(url_for('home'))
         
@@ -296,18 +276,6 @@ def register():
                     'notification10' : ''} }
             )
             
-            
-            #users.update(
-            #    { 'name': session['username'] },
-            #    { '$push': { 'friends' : { '$each': ['testFriend1', '', '', '', '', '', '', '', '', ''] }}}
-            #)
-            
-            
-            #users.update(
-            #   { 'name': session['username'] },
-            #   { '$push': { 'scores': { '$each': [ 90, 92, 85 ] } } }
-            #)
-            
             return redirect(url_for('editprofile'))
             
         return 'Username already exists'
@@ -329,14 +297,12 @@ def editprofile():
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
         
-        
         users.update(
             { 'name': session['username'] },
             { '$set': {'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}#,
-            #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
+                'interest4' : request.form.get('interest4')}}
         )
         
         users.update(
@@ -344,30 +310,11 @@ def editprofile():
             { '$set': { 'profileDescription' : request.form.get('profileDescription')}}
         )
         
-        
-        
-        #if request.form.get('interest1') is None:
-        #    return "interest1 was not checked"
-    
-        #this will return red like the request.form.get('interest1'),
-        #but both produce errors when the optional field isn't filled
         return redirect(url_for('home'))
-        #return request.form.get('profileDescription') + " " + sessionUser['name'] + sessionUser['profileDescription']
-    
+
     #request.method is GET
     return render_template('editProfile.html')
 
-'''
-@app.route('/register/<filename>')
-def send_image(filename):
-    return send_from_directory("tempIMG", filename)
-
-#Code for displaying images in createProfile.html
-@app.route('/images')
-def images():
-    image_names = os.listdir('./tempIMG')
-    return render_template("createProfile.html", image_names=image_names)
-'''
 #Code for setting cookies
 @app.route('/setcookie')
 def setcookie():
@@ -384,5 +331,3 @@ def getcookie():
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
-    #app.run()
-    
