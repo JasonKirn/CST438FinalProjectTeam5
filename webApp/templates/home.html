@@ -12,6 +12,8 @@
             <h2> John Doe </h2>
             <img src = "tempIMG/egghead.jpg" />
         </div>
+        <h2>Your Status:</h2>{{statusPageText}}<br>
+        
         <div id = "connections">
             <h2> Connect with Others </h2>
         </div>
@@ -19,8 +21,15 @@
             <h2> Friend List</h2>
         </div>
         <div id = "status">
-            <h2> Statuses</h2>
+        <div class="form-group">
+            Custom Interest:
         </div>
+        <br>
+        <form action="/updateStatus" method="post">
+            <input type="text" name="statusTextField"></input>
+            <br>
+            </a><input type="submit" class="btn btn-default" value="Post!" name="statusTextPost" ></button>
+        </form>
         <div id = "events">
             <h2> Events</h2>
         </div>

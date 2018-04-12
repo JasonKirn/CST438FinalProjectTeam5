@@ -41,7 +41,21 @@ def admin():
   
     
     
-
+@app.route('/updateStatus', methods=['POST'])
+def btnTest():
+    if request.method == 'POST':
+        if 'username' in session:
+            users = mongo.db.siteUsers
+            sessionUser = users.find_one({'name' : session['username']})
+            myStatus = request.form['statusTextField']
+            users.update(
+                { 'name': session['username'] },
+                { '$set': { 'profileStatus' : request.form.get('statusTextField')}}
+            )
+        return render_template('home.html', statusPageText=myStatus)
+        #return welcome+""+statusText+"\n"+dbStatus
+    return "Null; bad return."
+    
 @app.route('/home')
 def home():
     return render_template('home.html')
@@ -160,7 +174,7 @@ def editprofile():
     
         #this will return red like the request.form.get('interest1'),
         #but both produce errors when the optional field isn't filled
-        return redirect(url_for('home'))
+        return redirect(url_for('test'))
         #return request.form.get('profileDescription') + " " + sessionUser['name'] + sessionUser['profileDescription']
     
     #request.method is GET
