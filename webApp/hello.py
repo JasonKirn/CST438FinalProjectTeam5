@@ -177,6 +177,22 @@ def images():
     image_names = os.listdir('./tempIMG')
     return render_template("createProfile.html", image_names=image_names)
 '''
+#Code for matching users based on interests.
+@app.route('/psuedo')
+def psuedo():
+    user2 = #db user2
+    userInterest1 [#user1 interest list from db] 
+    userInterest2 [#user2 interest list from db] 
+    matchCount = 0
+
+        for y in range (0, len(userInterest1)):
+            for z in range (0, len(userInterest2))
+                if userInterest1[z] == userInterest2[z]:
+                matchCount++
+
+     if (matchCount / len(userInterest1)) > 0.15
+        return user2
+
 #Code for setting cookies
 @app.route('/setcookie')
 def setcookie():
