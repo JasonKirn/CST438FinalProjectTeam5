@@ -37,7 +37,7 @@
             <br>
             <img id="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
             <!-- TODO: Some call to get the names of characters from that genre -->
-            
+
             <script type="text/javascript">
                 function swapImage() {
                     var image = document.getElementById("profilePicture");
@@ -45,29 +45,75 @@
                     image.src = character.value;
                 };
             </script>
-            
+
             <br><br> Write a profile description
             <br>
-            
+
             <div class="form-group">
                 <textarea class="form-control" name="profileDescription" rows="5" cols="50" id="description" placeholder="ProfileDescriptionTextArea"></textarea>
             </div>
-            
-            <br><br> Select some of your interests:
-            <br>
+
             <div class="form-group">
-                <input type="checkbox" class="form-control" name="interest1" value="red" placeholder="Interest1" checked> Red<br>
-                <input type="checkbox" class="form-control" name="interest2" value="green" placeholder="Interest2"> Green<br>
-                <input type="checkbox" class="form-control" name="interest3" value="blue" placeholder="Interest3"> Blue<br>
-                <input type="checkbox" class="form-control" name="interest4" value="yellow" placeholder="Interest4"> Yellow
+                <button class="accordion">Books</button>
+                <div class="panel">
+                    <input type="checkbox" class="form-control" name="interest1" value="fantasy" checked> Fantasy<br>
+                    <input type="checkbox" class="form-control" name="interest2" value="fiction"> Fiction<br>
+                    <input type="checkbox" class="form-control" name="interest3" value="science fiction"> Science Fiction<br>
+                    <input type="checkbox" class="form-control" name="interest4" value="bigraphical"> Biographical
+                </div>
+
+                <button class="accordion">Comics</button>
+                <div class="panel">
+                    <input type="checkbox" class="form-control" name="interest5" value="american comics" checked> American Comics<br>
+                    <input type="checkbox" class="form-control" name="interest6" value="manga"> Manga<br>
+                    <input type="checkbox" class="form-control" name="interest7" value="manhwa"> Manhwa<br>
+                    <input type="checkbox" class="form-control" name="interest8" value="web toons"> Web Toons
+                </div>
+
+                <button class="accordion">Games</button>
+                <div class="panel">
+                    <input type="checkbox" class="form-control" name="interest9" value="fighting" checked> Fighting<br>
+                    <input type="checkbox" class="form-control" name="interest10" value="fps"> FPS<br>
+                    <input type="checkbox" class="form-control" name="interest11" value="mmo"> MMO<br>
+                    <input type="checkbox" class="form-control" name="interest12" value="moba"> MOBA<br>
+                    <input type="checkbox" class="form-control" name="interest13" value="rpg"> RPG<br>
+                    <input type="checkbox" class="form-control" name="interest14" value="rts"> RTS<br>
+                </div>
+
+                <button class="accordion">Movies</button>
+                <div class="panel">
+                    <input type="checkbox" class="form-control" name="interest15" value="action" checked> Action<br>
+                    <input type="checkbox" class="form-control" name="interest16" value="comedy"> Comedy<br>
+                    <input type="checkbox" class="form-control" name="interest17" value="drama"> Drama<br>
+                    <input type="checkbox" class="form-control" name="interest18" value="indy"> Indy
+                </div>
+
             </div>
+            <script>
+                var acc = document.getElementsByClassName("accordion");
+                var i;
+
+                for (i = 0; i < acc.length; i++) {
+                    acc[i].preventDefault();
+                    acc[i].addEventListener("click", function() {
+                        this.classList.toggle("active");
+                        var panel = this.nextElementSibling;
+                        if (panel.style.display === "block") {
+                            panel.style.display = "none";
+                        }
+                        else {
+                            panel.style.display = "block";
+                        }
+                    });
+                }
+            </script>
             <br><br>
             <div class="form-group">
                 Custom Interest:
-                <input type="text" class="form-control" name="customInterest" >
+                <input type="text" class="form-control" name="customInterest">
             </div>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-block">Continue</button>
+        <button type="submit">Continue</button>
     </form>
 
 </body>
