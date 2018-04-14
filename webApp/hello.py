@@ -81,12 +81,19 @@ def request_twitter():
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
     auth.set_access_token(token, token_secret)
     api = tweepy.API(auth)
+    
+    public_tweets = api.home_timeline()
+    
+    singleTweet = public_tweets[0].text
 
+    '''
     public_tweets = api.home_timeline()
     for tweet in public_tweets:
         print tweet.text
-    
-    return redirect(url_for('editprofile'))
+    '''
+    return render_template('sessionUser.html', singleTweet = singleTweet)
+
+
 
 #endpoint for userprofile, siteUser must be a user in the db for it to work.
 @app.route('/users/<siteUser>')
@@ -100,6 +107,11 @@ def user(siteUser):
     sessionUser = session['username']
     
     if user is not None:
+        
+        public_tweets = api.home_timeline()
+    for tweet in public_tweets:
+        print tweet.text
+        
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
@@ -225,14 +237,7 @@ def editprofile():
     return render_template('editProfile.html')
 
 '''
-@app.route('/register/<filename>')
-def send_image(filename):
-    return send_from_directory("tempIMG", filename)
-#Code for displaying images in createProfile.html
-@app.route('/images')
-def images():
-    image_names = os.listdir('./tempIMG')
-    return render_template("createProfile.html", image_names=image_names)
+
 '''
 #Code for setting cookies
 @app.route('/setcookie')
