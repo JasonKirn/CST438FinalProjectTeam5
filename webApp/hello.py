@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import pprint
 import pymongo
@@ -5,9 +6,16 @@ from flask import Flask, render_template, url_for, request, session, redirect, m
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
+import tweepy
+
+
 #from flask_bcrypt import bcrypt
 #Note: Do not use flask_bcrypt anymore, overwrites some of bcrypt's functions and does not allow us
 #to compare passwords on login
+
+consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
+consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
+callback = 'http://cst438-final-project-jared-long3686.c9users.io:8080/callback'
 
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
@@ -27,7 +35,7 @@ def hello():
     #but currently just logs out for faster testing, changing later
     #if it doesn't redirect to logout, the login state will be persistent
     if 'username' in session:
-        return redirect(url_for('logout'))
+        return redirect(url_for('home'))
         
     return render_template('login.html')
 
@@ -37,10 +45,6 @@ def admin():
     if 'username' in session:
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
-    
-  
-    
-    
 
 @app.route('/home')
 def home():
@@ -51,6 +55,39 @@ def logout():
     session.clear()
     return redirect(url_for('hello'))
 
+@app.route('/twitterauth')
+def twitterauth():
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
+    url = auth.get_authorization_url()
+    session['request_token'] = auth.request_token
+    return redirect(url)
+
+@app.route('/callback')
+def twitter_callback():
+    request_token = session['request_token']
+    del session['request_token']
+
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback)
+    auth.request_token = request_token
+    verifier = request.args.get('oauth_verifier')
+    auth.get_access_token(verifier)
+    session['token'] = (auth.access_token, auth.access_token_secret)
+
+    return redirect('/twitterapp')
+    
+@app.route('/twitterapp')
+def request_twitter():
+    token, token_secret = session['token']
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
+    auth.set_access_token(token, token_secret)
+    api = tweepy.API(auth)
+
+    public_tweets = api.home_timeline()
+    for tweet in public_tweets:
+        print tweet.text
+    
+    return redirect(url_for('editprofile'))
+
 #endpoint for userprofile, siteUser must be a user in the db for it to work.
 @app.route('/users/<siteUser>')
 def user(siteUser):
@@ -60,6 +97,7 @@ def user(siteUser):
     
     users = mongo.db.siteUsers
     user = users.find_one({'name' : siteUser})
+    sessionUser = session['username']
     
     if user is not None:
         posts = [
@@ -67,7 +105,11 @@ def user(siteUser):
         ]
         #TODO: Figure out why user variable won't show up on user.html even though it's passed
         #and used in the same way it is used in the tutorial.
-        return render_template('user.html', user=user, posts=posts )
+        #return siteUser + "   " + sessionUser
+        if siteUser == sessionUser:
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
+        else:
+            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
         #return statement works, return a template now
         #return "This is the userpage of " + siteUser
 
@@ -118,6 +160,21 @@ def register():
             #create session for newly registered user
             session['username'] = request.form['username']
             
+            users.update(
+                { 'name': session['username'] },
+                { '$set' : { 'friend1' : 'dog', 'friend2' : 'fish', 'friend3' : 'duck' } }
+            )
+            #users.update(
+            #    { 'name': session['username'] },
+            #    { '$push': { 'friends' : { '$each': ['testFriend1', '', '', '', '', '', '', '', '', ''] }}}
+            #)
+            
+            
+            #users.update(
+            #   { 'name': session['username'] },
+            #   { '$push': { 'scores': { '$each': [ 90, 92, 85 ] } } }
+            #)
+            
             return redirect(url_for('editprofile'))
             
         return 'Username already exists'
@@ -138,13 +195,14 @@ def editprofile():
         #1. request.form.get is needed for optional form fields
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
+        
+        
         users.update(
             { 'name': session['username'] },
-            { '$set': { 'colorInterests' : {
-                'interest1' : request.form.get('interest1'),
+            { '$set': {'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}}#,
+                'interest4' : request.form.get('interest4')}}#,
             #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
         )
         
@@ -170,7 +228,6 @@ def editprofile():
 @app.route('/register/<filename>')
 def send_image(filename):
     return send_from_directory("tempIMG", filename)
-
 #Code for displaying images in createProfile.html
 @app.route('/images')
 def images():
@@ -192,7 +249,5 @@ def getcookie():
 
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
-    app.run(debug=True)
-    app.run()
-    
-app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)))
+    app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
+    #app.run()
