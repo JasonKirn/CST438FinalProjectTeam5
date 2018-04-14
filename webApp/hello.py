@@ -141,11 +141,11 @@ def editprofile():
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
         users.update(
             { 'name': session['username'] },
-            { '$set': { 'colorInterests' : {
+            { '$set': {
                 'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}}#,
+                'interest4' : request.form.get('interest4')}}#,
             #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
         )
         
