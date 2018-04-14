@@ -1,12 +1,17 @@
 {% include "dashboard.html" %}
 <html>
 
-<a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
+<a href="{{ url_for('editprofile') }}">Edit Profile</a>
 <body>
 
     <h1>User: {{ user.name }}</h1>
-    <h2>Status: {{user.profileStatus}}</h2>
-    <div>{{ user.profileDescription }}</div>
+    <h2>Your Status: {{user.profileStatus}}</h2>
+    <form action="/updateStatus" method="post">
+        <input type="text" name="statusTextField"></input>
+        <br>
+        </a><input type="submit" class="btn btn-default" value="Post!" name="statusTextPost" ></button>
+    </form>
+
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
@@ -23,6 +28,7 @@
                 showBtn = 'button1';
                 hideBtn = 'button2';
                 document.getElementById("Interests").innerHTML = '';
+
             }
             document.getElementById(hideBtn).style.display = 'none';
             document.getElementById(showBtn).style.display = '';
