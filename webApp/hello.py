@@ -5,6 +5,7 @@ import pymongo
 from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
+from flask_login import LoginManager, login_user
 import bcrypt
 
 app = Flask(__name__)
@@ -17,6 +18,8 @@ app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/b
 app.config['SECRET_KEY'] = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
 mongo = PyMongo(app)
+
+#login_manager = LoginManager()
 
 # Host home.html as the home directory webpage (at '/').
 @app.route('/')
@@ -165,7 +168,9 @@ def addfriend(userToAdd):
 
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    return render_template('home.html', user=user)
     
 @app.route('/logout')
 def logout():
@@ -209,13 +214,6 @@ def test():
         users = mongo.db.siteUsers
         user = users.find_one({'name' : session['username']})
         return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
-        
-#Accessed by adding on /add to url.  It will insert a sample user into mlab db
-@app.route('/add')
-def addSiteUser():
-    user = mongo.db.siteUsers
-    user.insert({'name' : 'testUserName'})
-    return 'Added User!'
     
 @app.route('/login', methods=['POST'])
 def login():
@@ -224,7 +222,7 @@ def login():
     
     if loginUser is not None:
         isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
-
+        
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
