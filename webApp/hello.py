@@ -213,6 +213,9 @@ def test():
     if 'username' in session:
         users = mongo.db.siteUsers
         user = users.find_one({'name' : session['username']})
+        
+        for userCursor in users.find():
+            return userCursor['name']
         return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
     
 @app.route('/login', methods=['POST'])
@@ -297,16 +300,24 @@ def editprofile():
         
         users.update(
             { 'name': session['username'] },
-            { '$set': {
-                'interest1' : request.form.get('interest1'),
-                'interest2' : request.form.get('interest2'),
-                'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}#,
-            #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
             { '$set': {'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}
+                'interest4' : request.form.get('interest4'),
+                'interest5' : request.form.get('interest5'),
+                'interest6' : request.form.get('interest6'),
+                'interest7' : request.form.get('interest7'),
+                'interest8' : request.form.get('interest8'),
+                'interest9' : request.form.get('interest9'),
+                'interest10' : request.form.get('interest10'),
+                'interest11' : request.form.get('interest11'),
+                'interest12' : request.form.get('interest12'),
+                'interest13' : request.form.get('interest13'),
+                'interest14' : request.form.get('interest14'),
+                'interest15' : request.form.get('interest15'),
+                'interest16' : request.form.get('interest16'),
+                'interest17' : request.form.get('interest17'),
+                'interest18' : request.form.get('interest18')}}
         )
         
         users.update(
@@ -319,21 +330,6 @@ def editprofile():
     #request.method is GET
     return render_template('editProfile.html')
 
-<<<<<<< HEAD
-'''
-@app.route('/register/<filename>')
-def send_image(filename):
-    return send_from_directory("tempIMG", filename)
-
-#Code for displaying images in createProfile.html
-@app.route('/images')
-def images():
-    image_names = os.listdir('./tempIMG')
-    return render_template("createProfile.html", image_names=image_names)
-'''
-
-=======
->>>>>>> origin/friendList_refactored
 #Code for setting cookies
 @app.route('/setcookie')
 def setcookie():
@@ -349,11 +345,4 @@ def getcookie():
 
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
-<<<<<<< HEAD
     app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
-    
-   
-    
-=======
-    app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
->>>>>>> origin/friendList_refactored
