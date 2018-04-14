@@ -92,9 +92,9 @@
             <script>
                 var acc = document.getElementsByClassName("accordion");
                 var i;
+                acc[i].preventDefault();
 
                 for (i = 0; i < acc.length; i++) {
-                    acc[i].preventDefault();
                     acc[i].addEventListener("click", function() {
                         this.classList.toggle("active");
                         var panel = this.nextElementSibling;
