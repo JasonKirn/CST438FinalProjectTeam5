@@ -1,0 +1,13 @@
+{% include "dashboard.html" %}
+<!DOCTYPE html>
+<html>
+    <body>
+    <h1>Hi {{ user.name }}!</h1>
+        <h2>Here are some people you might like to be friends with.</h2>
+        <ul>
+            {% for user in ranked_matches %}
+                <li>{{ }}</li>
+            {% endfor %}
+        </ul>
+    </body>
+</html>

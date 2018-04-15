@@ -5,7 +5,6 @@ import pymongo
 from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
-from flask_login import LoginManager, login_user
 import bcrypt
 
 app = Flask(__name__)
@@ -18,6 +17,14 @@ app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/b
 app.config['SECRET_KEY'] = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
 mongo = PyMongo(app)
+
+INTERESTS =[ 
+    'interest1', 'interest2', 'interest3', 'interest4', 
+    'interest5', 'interest6', 'interest7', 'interest8', 
+    'interest9', 'interest10', 'interest11', 'interest12', 
+    'interest13', 'interest14', 'interest15', 'interest16', 
+    'interest17', 'interest18' 
+]
 
 #login_manager = LoginManager()
 
@@ -329,6 +336,19 @@ def editprofile():
 
     #request.method is GET
     return render_template('editProfile.html')
+    
+#Code for getting matches between users
+@app.route('/psuedo')
+def psuedo():
+    matchScores = {}
+    users = mongo.db.siteUsers
+    user = users.find_one({'name':session['username']})
+    for iterUser in users.find():
+        matchScores[iterUser] = sum([iterUser[i] == user[i] for i in INTERESTS])
+    ranked_matches = sorted(matchScores, key=matchScores.get, reversed = True)
+    ranked_matches[5:]
+    
+    return render_template('matches.html', ranked_matches = ranked_matches)
 
 #Code for setting cookies
 @app.route('/setcookie')
