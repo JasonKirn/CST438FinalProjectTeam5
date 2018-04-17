@@ -3,10 +3,10 @@
 <html>
     <body>
     <h1>Hi {{ user.name }}!</h1>
-        <h2>Here are some people you might like to be friends with.</h2>
+        <h2>These are the {{ matched_users|count }} people you have most in common with.</h2>
         <ul>
-            {% for user in ranked_matches %}
-                <li>{{ }}</li>
+            {% for user in matched_users %}
+                <li><a href="/users/{{ user['name'] }}">match {{ loop.index }}</a></li>
             {% endfor %}
         </ul>
     </body>

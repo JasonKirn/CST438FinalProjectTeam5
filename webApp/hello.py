@@ -340,15 +340,19 @@ def editprofile():
 #Code for getting matches between users
 @app.route('/psuedo')
 def psuedo():
-    matchScores = {}
+    matchScores = []
     users = mongo.db.siteUsers
-    user = users.find_one({'name':session['username']})
+    user = users.find_one({'name': session['username']})
+    print(user.keys())
     for iterUser in users.find():
-        matchScores[iterUser] = sum([iterUser[i] == user[i] for i in INTERESTS])
-    ranked_matches = sorted(matchScores, key=matchScores.get, reversed = True)
-    ranked_matches[5:]
-    
-    return render_template('matches.html', ranked_matches = ranked_matches)
+        if iterUser == user: continue
+        score = sum([iterUser[i] == user[i] for i in INTERESTS])
+        if score > 3:
+            matchScores.append((score, iterUser['name'], iterUser))
+    ranked_matches = sorted(matchScores, reverse=True)
+    matched_users = [x[2] for x in ranked_matches[:5]]
+
+    return render_template('matches.html', user=user, matched_users=matched_users)
 
 #Code for setting cookies
 @app.route('/setcookie')
