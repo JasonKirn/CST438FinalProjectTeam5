@@ -17,6 +17,7 @@ consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
 consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
 callback = 'http://cst438-final-project-jared-long3686.c9users.io:8080/callback'
 
+
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
@@ -82,17 +83,20 @@ def request_twitter():
     auth.set_access_token(token, token_secret)
     api = tweepy.API(auth)
     
-    public_tweets = api.home_timeline()
     
-    singleTweet = public_tweets[0].text
-
-    '''
-    public_tweets = api.home_timeline()
-    for tweet in public_tweets:
-        print tweet.text
-    '''
-    return render_template('sessionUser.html', singleTweet = singleTweet)
-
+    #public_tweets = api.home_timeline()
+    
+    #session['user'] = public_tweets[0].text
+    
+    user = api.me()
+    
+    session['twitterUser'] = user.screen_name
+    
+    public_tweets = api.user_timeline()
+    #for tweet in public_tweets:
+        #print tweet.text
+    #return render_template('sessionUser.html', singleTweet = singleTweet)
+    return redirect(url_for('editprofile'))
 
 
 #endpoint for userprofile, siteUser must be a user in the db for it to work.
@@ -105,12 +109,12 @@ def user(siteUser):
     users = mongo.db.siteUsers
     user = users.find_one({'name' : siteUser})
     sessionUser = session['username']
+    twitterUser = session['twitterUser']
+    #twitterTimeline = session['twitterTimeline']
+    
+    print twitterUser
     
     if user is not None:
-        
-        public_tweets = api.home_timeline()
-    for tweet in public_tweets:
-        print tweet.text
         
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
@@ -119,9 +123,9 @@ def user(siteUser):
         #and used in the same way it is used in the tutorial.
         #return siteUser + "   " + sessionUser
         if siteUser == sessionUser:
-            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts, twitterUser = twitterUser)
         else:
-            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
+            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts, twitterUser = twitterUser)
         #return statement works, return a template now
         #return "This is the userpage of " + siteUser
 

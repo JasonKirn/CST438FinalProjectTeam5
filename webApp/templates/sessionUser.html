@@ -3,14 +3,13 @@
 <a href="{{ url_for('editprofile') }}">Edit Profile</a>
 
 <body>
-        Twitter Feed: {{singleTweet}}
-    <!--
-    
+        
+        <h1>User: {{ user.name }}</h1>
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
+        Twitter Feed: {{twitterUser}} {{twitterTimeline}}
     </p>
-    -->
     <script>
         function ShowHide(buttonId) {
             var hideBtn, showBtn;
