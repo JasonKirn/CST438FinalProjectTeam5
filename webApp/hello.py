@@ -2,11 +2,13 @@
 import os
 import pprint
 import pymongo
-from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory
+from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 from flask_login import LoginManager, login_user
 import bcrypt
+from key import key
+import requests
 
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
@@ -16,6 +18,9 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 app.config['MONGO_DBNAME'] = 'beammeupscotty'
 app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/beammeupscotty'
 app.config['SECRET_KEY'] = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
+
+search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+details_url = "https://maps.googleapis.com/maps/api/place/details/json"
 
 mongo = PyMongo(app)
 
@@ -31,6 +36,31 @@ def hello():
         return redirect(url_for('home'))
         
     return render_template('login.html')
+
+@app.route("/testGoogle", methods=["GET"])
+def retrieve():
+    return render_template('googleApiLayout.html')
+
+@app.route("/googleApi")
+def googleApi():
+    
+    return render_template('googleApi.html')
+
+@app.route("/sendRequest/<string:query>")
+def results(query):
+	search_payload = {"key":key, "query":query}
+	search_req = requests.get(search_url, params=search_payload)
+	search_json = search_req.json()
+
+	place_id = search_json["results"][0]["place_id"]
+
+	details_payload = {"key":key, "placeid":place_id}
+	details_resp = requests.get(details_url, params=details_payload)
+	details_json = details_resp.json()
+
+	#url = details_json["result"]["url"]
+	url = "https://www.google.com"
+	return jsonify({'result' : url})
 
 @app.route('/friendlist')
 def friendlist():
@@ -214,9 +244,7 @@ def test():
         users = mongo.db.siteUsers
         user = users.find_one({'name' : session['username']})
         
-        for userCursor in users.find():
-            return userCursor['name']
-        return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
+        return "Hello " + session['username']
     
 @app.route('/login', methods=['POST'])
 def login():
