@@ -41,10 +41,9 @@ def hello():
 def retrieve():
     return render_template('googleApiLayout.html')
 
-@app.route("/googleApi")
-def googleApi():
-    
-    return render_template('googleApi.html')
+@app.route("/googleApi/<location>")
+def googleApi(location):
+    return render_template('googleApi.html', location=location)
 
 @app.route("/sendRequest/<string:query>")
 def results(query):
