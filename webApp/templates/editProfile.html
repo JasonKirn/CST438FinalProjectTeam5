@@ -2,6 +2,10 @@
 
 <head>
     <meta charset- "utf-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -35,7 +39,7 @@
                     <option value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
                 </select> <br/>
             <br>
-            <img id="profilePicture" name = "profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
+            <img id="profilePicture" name="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
             <!-- TODO: Some call to get the names of characters from that genre -->
 
             <script type="text/javascript">
@@ -53,60 +57,80 @@
                 <textarea class="form-control" name="profileDescription" rows="5" cols="50" id="description" placeholder="ProfileDescriptionTextArea"></textarea>
             </div>
 
-            <div class="form-group">
-                <button class="accordion">Books</button>
-                <div class="panel">
-                    <input type="checkbox" class="form-control" name="interest1" value="fantasy" checked> Fantasy<br>
-                    <input type="checkbox" class="form-control" name="interest2" value="fiction"> Fiction<br>
-                    <input type="checkbox" class="form-control" name="interest3" value="science fiction"> Science Fiction<br>
-                    <input type="checkbox" class="form-control" name="interest4" value="bigraphical"> Biographical
+            <div class="form-group" action="" onsubmit="return false">
+                <div id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Books
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest1" value="fantasy"> Fantasy<br>
+                                <input type="checkbox" class="form-control" name="interest2" value="fiction"> Fiction<br>
+                                <input type="checkbox" class="form-control" name="interest3" value="science fiction"> Science Fiction<br>
+                                <input type="checkbox" class="form-control" name="interest4" value="bigraphical"> Biographical
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          Comics
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest5" value="american comics"> American Comics<br>
+                                <input type="checkbox" class="form-control" name="interest6" value="manga"> Manga<br>
+                                <input type="checkbox" class="form-control" name="interest7" value="manhwa"> Manhwa<br>
+                                <input type="checkbox" class="form-control" name="interest8" value="web toons"> Web Toons
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Games
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest9" value="fighting"> Fighting<br>
+                                <input type="checkbox" class="form-control" name="interest10" value="fps"> FPS<br>
+                                <input type="checkbox" class="form-control" name="interest11" value="mmo"> MMO<br>
+                                <input type="checkbox" class="form-control" name="interest12" value="moba"> MOBA<br>
+                                <input type="checkbox" class="form-control" name="interest13" value="rpg"> RPG<br>
+                                <input type="checkbox" class="form-control" name="interest14" value="rts"> RTS
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+         Movies
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse" aria-labelledby="headingFour" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest15" value="action"> Action<br>
+                                <input type="checkbox" class="form-control" name="interest16" value="comedy"> Comedy<br>
+                                <input type="checkbox" class="form-control" name="interest17" value="drama"> Drama<br>
+                                <input type="checkbox" class="form-control" name="interest18" value="indy"> Indy
+                            </div>
+                        </div>
+                    </div>
                 </div>
-
-                <button class="accordion">Comics</button>
-                <div class="panel">
-                    <input type="checkbox" class="form-control" name="interest5" value="american comics" checked> American Comics<br>
-                    <input type="checkbox" class="form-control" name="interest6" value="manga"> Manga<br>
-                    <input type="checkbox" class="form-control" name="interest7" value="manhwa"> Manhwa<br>
-                    <input type="checkbox" class="form-control" name="interest8" value="web toons"> Web Toons
-                </div>
-
-                <button class="accordion">Games</button>
-                <div class="panel">
-                    <input type="checkbox" class="form-control" name="interest9" value="fighting" checked> Fighting<br>
-                    <input type="checkbox" class="form-control" name="interest10" value="fps"> FPS<br>
-                    <input type="checkbox" class="form-control" name="interest11" value="mmo"> MMO<br>
-                    <input type="checkbox" class="form-control" name="interest12" value="moba"> MOBA<br>
-                    <input type="checkbox" class="form-control" name="interest13" value="rpg"> RPG<br>
-                    <input type="checkbox" class="form-control" name="interest14" value="rts"> RTS<br>
-                </div>
-
-                <button class="accordion">Movies</button>
-                <div class="panel">
-                    <input type="checkbox" class="form-control" name="interest15" value="action" checked> Action<br>
-                    <input type="checkbox" class="form-control" name="interest16" value="comedy"> Comedy<br>
-                    <input type="checkbox" class="form-control" name="interest17" value="drama"> Drama<br>
-                    <input type="checkbox" class="form-control" name="interest18" value="indy"> Indy
-                </div>
-
             </div>
-            <script>
-                var acc = document.getElementsByClassName("accordion");
-                var i;
-                acc[i].preventDefault();
-
-                for (i = 0; i < acc.length; i++) {
-                    acc[i].addEventListener("click", function() {
-                        this.classList.toggle("active");
-                        var panel = this.nextElementSibling;
-                        if (panel.style.display === "block") {
-                            panel.style.display = "none";
-                        }
-                        else {
-                            panel.style.display = "block";
-                        }
-                    });
-                }
-            </script>
             <br><br>
             <div class="form-group">
                 Custom Interest:

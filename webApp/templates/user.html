@@ -2,6 +2,14 @@
 <html>
 
 <a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
+
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+</head>
+
 <body>
 
     <h1>User: {{ user.name }}</h1>
@@ -10,27 +18,103 @@
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
     </p>
-    <script>
-        function ShowHide(buttonId) {
-            var hideBtn, showBtn;
-            if (buttonId == 'button1') {
-                showBtn = 'button2';
-                hideBtn = 'button1';
-                document.getElementById("Interests").innerHTML = "block";
-            }
-            else {
-                showBtn = 'button1';
-                hideBtn = 'button2';
-                document.getElementById("Interests").innerHTML = '';
+    <div>
+        <div id="accordion">
+            <div class="card">
+                <div class="card-header" id="headingOne">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Books
+        </button>
+                    </h5>
+                </div>
 
-            }
-            document.getElementById(hideBtn).style.display = 'none';
-            document.getElementById(showBtn).style.display = '';
-        }
-    </script>
-    <button id="button1" onclick="ShowHide('button1');" class="sideviewtoggle myButton">Show Interests</button>
-    <button id="button2" onclick="ShowHide('button2');" class="sideviewtoggle myButton" style='display:none;'>Hide Interests</button>
-    <div id= "Interests">
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                    <div class="card-body">
+                        {% if user.interest1 != None %}
+                        <ul>{{user.interest1}}</ul>
+                        {% endif %} {% if user.interest2 != None %}
+                        <ul>{{user.interest2}}</ul>
+                        {% endif %} {% if user.interest3 != None %}
+                        <ul>{{user.interest3}}</ul>
+                        {% endif %} {% if user.interest4 != None %}
+                        <ul>{{user.interest4}}</ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingTwo">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Comics
+        </button>
+                    </h5>
+                </div>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                    <div class="card-body">
+                        {% if user.interest5 != None %}
+                        <ul>{{user.interest5}}</ul>
+                        {% endif %} {% if user.interest6 != None %}
+                        <ul>{{user.interest6}}</ul>
+                        {% endif %} {% if user.interest7 != None %}
+                        <ul>{{user.interest7}}</ul>
+                        {% endif %} {% if user.interest8 != None %}
+                        <ul>{{user.interest8}}</ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingThree">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Games
+        </button>
+                    </h5>
+                </div>
+                <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+                        {% if user.interest9 != None %}
+                        <ul>{{user.interest9}}</ul>
+                        {% endif %} {% if user.interest10 != None %}
+                        <ul>{{user.interest10}}</ul>
+                        {% endif %} {% if user.interest11 != None %}
+                        <ul>{{user.interest11}}</ul>
+                        {% endif %} {% if user.interest12 != None %}
+                        <ul>{{user.interest12}}</ul>
+                        {% endif %} {% if user.interest13 != None %}
+                        <ul>{{user.interest13}}</ul>
+                        {% endif %} {% if user.interest14 != None %}
+                        <ul>{{user.interest14}}</ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header" id="headingFour">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+         Movies
+        </button>
+                    </h5>
+                </div>
+                <div id="collapseFour" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                    <div class="card-body">
+
+                        {% if user.interest15 != None %}
+                        <ul>{{user.interest15}}</ul>
+                        {% endif %} {% if user.interest16 != None %}
+                        <ul>{{user.interest16}}</ul>
+                        {% endif %} {% if user.interest17 != None %}
+                        <ul>{{user.interest17}}</ul>
+                        {% endif %} {% if user.interest18 != None %}
+                        <ul>{{user.interest18}}</ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
 

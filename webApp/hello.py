@@ -338,15 +338,15 @@ def editprofile():
     return render_template('editProfile.html')
     
 #Code for getting matches between users
-@app.route('/psuedo')
-def psuedo():
+@app.route('/matches')
+def matches():
     matchScores = []
     users = mongo.db.siteUsers
     user = users.find_one({'name': session['username']})
     print(user.keys())
     for iterUser in users.find():
         if iterUser == user: continue
-        score = sum([iterUser[i] == user[i] for i in INTERESTS])
+        score = sum([iterUser[i] == user[i] for i in INTERESTS if i in iterUser and i in user])
         if score > 3:
             matchScores.append((score, iterUser['name'], iterUser))
     ranked_matches = sorted(matchScores, reverse=True)

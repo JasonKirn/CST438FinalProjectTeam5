@@ -1,34 +1,37 @@
-{% include "dashboard.html" %}
-{% block body %}
+{% include "dashboard.html" %} {% block body %}
 <html>
-    <head>
-        <link  href="css/styles.css" rel="stylesheet" type="text/css" />
-    </head>
-    <body>
-        <header> 
-            <h1>Team Me Up Scotty</h1>
-        </header>
-        <a href="{{ url_for('editprofile') }}">Edit Profile</a>
-        <div id = "profile">
-            <h2> Welcome {{user.name}} </h2>
+
+<head>
+    <link href="css/styles.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body>
+    <header>
+        <h1>Team Me Up Scotty</h1>
+    </header>
+    <a href="{{ url_for('editprofile') }}">Edit Profile</a>
+    <div id="profile">
+        <h2> Welcome {{user.name}} </h2>
+    </div>
+    <div id="connections">
+        <h2> Find Users with Similar Interests</h2>
+        <a href="{{ url_for('matches') }}">Find Users</a>
+    </div>
+    <div id="list">
+        <h2> Friend List</h2>
+    </div>
+    <div id="status">
+        <h2> Statuses</h2>
+        <div class="form-group">
+            <textarea class="form-control" name="statusUpdate" rows="5" cols="50" id="description" placeholder="Whats new?"></textarea>
+            <br>
+            <button type="submit" class="btn btn-primary btn-block">Update</button>
         </div>
-        <div id = "connections">
-            <h2> Connect with Others </h2>
-        </div>
-        <div id = "list">
-            <h2> Friend List</h2>
-        </div>
-        <div id = "status">
-            <h2> Statuses</h2>
-            <div class="form-group">
-                <textarea class="form-control" name="statusUpdate" rows="5" cols="50" id="description" placeholder="Whats new?"></textarea>
-                <br>
-                <button type="submit" class="btn btn-primary btn-block">Update</button>
-            </div>
-        </div>
-        <div id = "events">
-            <h2> Events</h2>
-        </div>
-    </body>
+    </div>
+    <div id="events">
+        <h2> Events</h2>
+    </div>
+</body>
+
 </html>
 {% endblock %}
