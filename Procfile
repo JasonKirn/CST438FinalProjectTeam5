@@ -1,1 +1,1 @@
-web: sh -c 'cd ./webApp/ && exec gunicorn hello:app'
+web: gunicorn --chdir webApp hello:app
