@@ -5,6 +5,7 @@
 <body>
 
     <h1>User: {{ user.name }}</h1>
+    <h2>Status: {{user.profileStatus}}</h2>
     <div>{{ user.profileDescription }}</div>
     <hr> {% for post in posts %}
     <p>
@@ -22,7 +23,6 @@
                 showBtn = 'button1';
                 hideBtn = 'button2';
                 document.getElementById("Interests").innerHTML = '';
-
             }
             document.getElementById(hideBtn).style.display = 'none';
             document.getElementById(showBtn).style.display = '';
