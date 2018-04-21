@@ -190,10 +190,11 @@ def addfriend(userToAdd):
 def home():
     
     user = getUser(session['username'])
-    if(user['profileStatus'] is None):
-        return render_template('home.html', user=user)
+    if(user is None):
+        return render_template('login.html')
     else:
-        return render_template('home.html', statusPageText=user['profileStatus'])
+        return render_template('home.html', user=user)
+    #FIX 4/21
     
 @app.route('/logout')
 def logout():
@@ -298,8 +299,9 @@ def editprofile():
             setInterest(userName, i, request.form.get('interest'+str(i)))
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
         updateEntry(userName, 'avatarImage', request.form.get('profileCharacter'))
-        return render_template('home.html', debug=request.form.get('profileCharacter'))
+        return render_template('home.html', user=sessionUser)
         #return redirect(url_for('home')
+        #4/21 FIX
     #request.method is GET
     return render_template('editProfile.html', sessionUser=sessionUser)
     
@@ -320,12 +322,14 @@ def matches():
 @app.route('/updateStatus', methods=['POST'])
 def btnTest():
     if request.method == 'POST':
-        if 'username' in session:
-            sessionUser = getUser(session['username'])
-            myStatus = request.form['statusTextField']
-            updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
-        return render_template('home.html', statusPageText=myStatus)
+        #4/21 FIX
+		sessionUser = getUser(session['username'])
+		if 'username' in session:
+		    myStatus = request.form['statusTextField']
+		    updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
+		return render_template('home.html', user=sessionUser)
         #return welcome+""+statusText+"\n"+dbStatus
+        #4/21 FIX
     return "Null; bad return."
 
 
