@@ -75,6 +75,30 @@ def twitter_callback():
     auth.request_token = request_token
     verifier = request.args.get('oauth_verifier')
     auth.get_access_token(verifier)
+    '''
+    Information to be stored in the database for the user 
+    
+    usersToken = auth.access_token
+    usersSecret = auth.access_token_secret
+    
+    Then you run this
+    
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(usersToken, usersSecret)
+    api = tweepy.API(auth)
+    
+    user = api.me()
+    
+    #instead of session, twitterUserLink would be stored in the database
+    session['twitterUserLink'] = "https://twitter.com/" + user.screen_name
+
+    return redirect(url_for('editprofile'))
+    
+    
+    This code should be able to run without redirecting to /twitterapp
+    If not then 
+    '''
+    #should be irrelevant after implementing above code
     session['token'] = (auth.access_token, auth.access_token_secret)
 
     return redirect('/twitterapp')
@@ -84,36 +108,38 @@ def request_twitter():
     token, token_secret = session['token']
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
     auth.set_access_token(token, token_secret)
+    
+   
     api = tweepy.API(auth)
     
-    
-    #public_tweets = api.home_timeline()
-    
-    #session['user'] = public_tweets[0].text
     
     user = api.me()
     
     session['twitterUser'] = user.screen_name
     
-    twitterUserName = user.screen_name
+    #instead of session, twitterUserLink would be stored in the database
+    session['twitterUserLink'] = "https://twitter.com/" + user.screen_name
     
-    twitterFileName = twitterUserName + ".txt"
+    #twitterUserName = user.screen_name
     
-    public_tweets = api.user_timeline()
+    #twitterFileName = "templates/" + twitterUserName + ".txt"
     
-    myTweetFile = open(twitterFileName,'w')
+    #public_tweets = api.user_timeline()
+    
+    '''
+    myTweetFile = open(twitterFileName,'w+')
     
     for i in range(0,10):
         myTweetFile.write(public_tweets[i].text.encode('utf-8'))
         myTweetFile.write("\n")
     
     myTweetFile.close()
+    '''
     #session['twitterFirstTweet'] = public_tweets[1].text
     #session['twitterSecondTweet'] = public_tweets[2].text
     #for tweet in public_tweets:
        # allTweets += str(tweet.text)
     #return render_template('sessionUser.html', singleTweet = singleTweet)
-    
     return redirect(url_for('editprofile'))
 
 
@@ -128,11 +154,11 @@ def user(siteUser):
     user = users.find_one({'name' : siteUser})
     sessionUser = session['username']
     twitterUser = session['twitterUser']
+    twitterUserLink = session['twitterUserLink']
     
-    print twitterUser
     
     if user is not None:
-        
+         
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
@@ -140,9 +166,9 @@ def user(siteUser):
         #and used in the same way it is used in the tutorial.
         #return siteUser + "   " + sessionUser
         if siteUser == sessionUser:
-            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts, twitterUser = twitterUser)
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
-            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts, twitterUser = twitterUser)
+            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         #return statement works, return a template now
         #return "This is the userpage of " + siteUser
 

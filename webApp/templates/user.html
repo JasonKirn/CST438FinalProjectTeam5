@@ -9,7 +9,7 @@
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
     </p>
-    <?php echo ("hi") ?>
+    <a class="twitter-timeline" href={{twitterUserLink}} data-height = "500" data-width = "500">Tweets by {{twitterUser}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
     <script>
         function ShowHide(buttonId) {
             var hideBtn, showBtn;
