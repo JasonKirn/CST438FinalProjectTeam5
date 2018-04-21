@@ -5,6 +5,13 @@
 <body>
 
     <h1>User: {{ user.name }}</h1>
+    <h2>Your Status: {{user.profileStatus}}</h2>
+    <form action="/updateStatus" method="post">
+        <input type="text" name="statusTextField"></input>
+        <br>
+        </a><input type="submit" class="btn btn-default" value="Post!" name="statusTextPost" ></button>
+    </form>
+
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
