@@ -294,10 +294,11 @@ def editprofile():
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
         userName = session['username']
-        for i in range(1,19):
+        for i in range(1,20):
             setInterest(userName, i, request.form.get('interest'+str(i)))
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
         updateEntry(userName, 'avatarImage', request.form.get('profileCharacter'))
+        
         return render_template('home.html', user=sessionUser)
         #return redirect(url_for('home')
         #4/21 FIX
