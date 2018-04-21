@@ -2,72 +2,146 @@
 
 <head>
     <meta charset- "utf-8"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
 </head>
 
 <body>
     <form method=POST action="{{ url_for('editprofile') }}">
         <fieldset>
             <legend>Edit Your Profile</legend>
-            Select a character: <select id="profileCharacter" onChange="swapImage()">
+                <div class="form-group">
+                    Select a character: <select name="profileCharacter" id="profileCharacter" onChange="swapImage()" onLoad="swapImage()">
                     <option value = "{{url_for('static',filename ='default.png')}}"> Select One </option>
-                    <option value = "{{url_for('static',filename ='asuna.jpeg')}}"> Asuna</option>
-                    <option value = "{{url_for('static',filename ='batman.png')}}"> Batman</option>
-                    <option value = "{{url_for('static',filename ='blackwidow.png')}}"> Black Widow</option>
-                    <option value = "{{url_for('static',filename ='cersei.jpg')}}"> Cersei Lannister</option>
-                    <option value = "{{url_for('static',filename ='daenerys.jpg')}}"> Daenerys Targaryen</option>
-                    <option value = "{{url_for('static',filename ='galadriel.png')}}"> Galadriel</option>
-                    <option value = "{{url_for('static',filename ='gandalf.jpg')}}"> Gandalf</option>
-                    <option value = "{{url_for('static',filename ='goku.png')}}"> Goku</option>
-                    <option value = "{{url_for('static',filename ='hermione.jpg')}}"> Hermione</option>
-                    <option value = "{{url_for('static',filename ='kakashi.jpg')}}"> Kakashi</option>
-                    <option value = "{{url_for('static',filename ='kirk.png')}}"> Kirk</option>
-                    <option value = "{{url_for('static',filename ='leia.png')}}"> Leia</option>
-                    <option value = "{{url_for('static',filename ='link.png')}}"> Link</option>
-                    <option value = "{{url_for('static',filename ='luffy.png')}}"> Luffy</option>
-                    <option value = "{{url_for('static',filename ='mario.png')}}"> Mario</option>
-                    <option value = "{{url_for('static',filename ='peach.jpeg')}}"> Princess Peach</option>
-                    <option value = "{{url_for('static',filename ='spiderman.png')}}"> Spider-Man</option>
-                    <option value = "{{url_for('static',filename ='spock.jpg')}}"> Spock</option>
-                    <option value = "{{url_for('static',filename ='tracer.jpg')}}"> Tracer</option>
-                    <option value = "{{url_for('static',filename ='vader.jpeg')}}"> Vader</option>
-                    <option value = "{{url_for('static',filename ='wonder_woman.png')}}"> Wonder Woman</option>
-                    <option value = "{{url_for('static',filename ='yoda.png')}}"> Yoda</option>
-                    <option value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/asuna.jpeg"}} value = "{{url_for('static',filename ='asuna.jpeg')}}"> Asuna</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/batman.png"}} value = "{{url_for('static',filename ='batman.png')}}"> Batman</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/blackwidow.png"}} value = "{{url_for('static',filename ='blackwidow.png')}}"> Black Widow</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/cersei.jpg"}} value = "{{url_for('static',filename ='cersei.jpg')}}"> Cersei Lannister</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/daenerys.jpg"}} value = "{{url_for('static',filename ='daenerys.jpg')}}"> Daenerys Targaryen</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/galadriel.png"}} value = "{{url_for('static',filename ='galadriel.png')}}"> Galadriel</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/gandalf.jpg"}} value = "{{url_for('static',filename ='gandalf.jpg')}}"> Gandalf</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/goku.png"}} value = "{{url_for('static',filename ='goku.png')}}"> Goku</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/hermione.jpg"}} value = "{{url_for('static',filename ='hermione.jpg')}}"> Hermione</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/kakashi.jpg"}} value = "{{url_for('static',filename ='kakashi.jpg')}}"> Kakashi</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/kirk.png"}} value = "{{url_for('static',filename ='kirk.png')}}"> Kirk</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/leia.png"}} value = "{{url_for('static',filename ='leia.png')}}"> Leia</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/link.png"}} value = "{{url_for('static',filename ='link.png')}}"> Link</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/luffy.png"}} value = "{{url_for('static',filename ='luffy.png')}}"> Luffy</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/mario.png"}} value = "{{url_for('static',filename ='mario.png')}}"> Mario</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/peach.jpeg"}} value = "{{url_for('static',filename ='peach.jpeg')}}"> Princess Peach</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/spiderman.png"}} value = "{{url_for('static',filename ='spiderman.png')}}"> Spider-Man</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/spock.jpg"}} value = "{{url_for('static',filename ='spock.jpg')}}"> Spock</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/tracer.jpg"}} value = "{{url_for('static',filename ='tracer.jpg')}}"> Tracer</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/vader.jpeg"}} value = "{{url_for('static',filename ='vader.jpeg')}}"> Vader</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/wonder_woman.png"}} value = "{{url_for('static',filename ='wonder_woman.png')}}"> Wonder Woman</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/yoda.png"}} value = "{{url_for('static',filename ='yoda.png')}}"> Yoda</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/zelda.png"}} value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
                 </select> <br/>
+                </div>
+
             <br>
-            <img id="profilePicture" name = "profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
+            <img id="profilePicture" name="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
             <!-- TODO: Some call to get the names of characters from that genre -->
-            
+
             <script type="text/javascript">
                 function swapImage() {
                     var image = document.getElementById("profilePicture"); //This element is where the image will be displayed
                     var character = document.getElementById("profileCharacter"); //This element is the character image that will be displayed.
                     image.src = character.value; //character.value is the image name to i.e. 'yoda.png'
                 };
+                swapImage()
             </script>
-            
+
             <br><br> Write a profile description
             <br>
-            
+
             <div class="form-group">
-                <textarea class="form-control" name="profileDescription" rows="5" cols="50" id="description" placeholder="ProfileDescriptionTextArea"></textarea>
+                <textarea class="form-control" name="profileDescription" rows="5" cols="50" id="description">{{sessionUser['profileDescription']}}</textarea>
             </div>
-            
-            <br><br> Select some of your interests:
-            <br>
-            <div class="form-group">
-                <input type="checkbox" class="form-control" name="interest1" value="red" placeholder="Interest1" checked> Red<br>
-                <input type="checkbox" class="form-control" name="interest2" value="green" placeholder="Interest2"> Green<br>
-                <input type="checkbox" class="form-control" name="interest3" value="blue" placeholder="Interest3"> Blue<br>
-                <input type="checkbox" class="form-control" name="interest4" value="yellow" placeholder="Interest4"> Yellow
+
+            <div class="form-group" action="" onsubmit="return false">
+                <div id="accordion">
+                    <div class="card">
+                        <div class="card-header" id="headingOne">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Books
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest1" value="fantasy" {{'checked="checked"' if sessionUser['interest1'] else ""}}> Fantasy<br>
+                                <input type="checkbox" class="form-control" name="interest2" value="fiction" {{'checked="checked"' if sessionUser['interest2'] else ""}}> Fiction<br>
+                                <input type="checkbox" class="form-control" name="interest3" value="science fiction"{{'checked="checked"' if sessionUser['interest3'] else ""}}> Science Fiction<br>
+                                <input type="checkbox" class="form-control" name="interest4" value="bigraphical"{{'checked="checked"' if sessionUser['interest4'] else ""}}> Biographical
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingTwo">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+          Comics
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseTwo" class="collapse show" aria-labelledby="headingTwo" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest5" value="american comics"{{'checked="checked"' if sessionUser['interest5'] else ""}}> American Comics<br>
+                                <input type="checkbox" class="form-control" name="interest6" value="manga"{{'checked="checked"' if sessionUser['interest6'] else ""}}> Manga<br>
+                                <input type="checkbox" class="form-control" name="interest7" value="manhwa"{{'checked="checked"' if sessionUser['interest7'] else ""}}> Manhwa<br>
+                                <input type="checkbox" class="form-control" name="interest8" value="web toons"{{'checked="checked"' if sessionUser['interest8'] else ""}}> Web Toons
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingThree">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+          Games
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseThree" class="collapse show" aria-labelledby="headingThree" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest9" value="fighting"{{'checked="checked"' if sessionUser['interest9'] else ""}}> Fighting<br>
+                                <input type="checkbox" class="form-control" name="interest10" value="fps"{{'checked="checked"' if sessionUser['interest10'] else ""}}> FPS<br>
+                                <input type="checkbox" class="form-control" name="interest11" value="mmo"{{'checked="checked"' if sessionUser['interest11'] else ""}}> MMO<br>
+                                <input type="checkbox" class="form-control" name="interest12" value="moba"{{'checked="checked"' if sessionUser['interest12'] else ""}}> MOBA<br>
+                                <input type="checkbox" class="form-control" name="interest13" value="rpg"{{'checked="checked"' if sessionUser['interest13'] else ""}}> RPG<br>
+                                <input type="checkbox" class="form-control" name="interest14" value="rts"{{'checked="checked"' if sessionUser['interest14'] else ""}}> RTS
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header" id="headingFour">
+                            <h5 class="mb-0">
+                                <button type="button" class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
+         Movies
+        </button>
+                            </h5>
+                        </div>
+                        <div id="collapseFour" class="collapse show" aria-labelledby="headingFour" data-parent="#accordion">
+                            <div class="card-body">
+                                <input type="checkbox" class="form-control" name="interest15" value="action"{{'checked="checked"' if sessionUser['interest15'] else ""}}> Action<br>
+                                <input type="checkbox" class="form-control" name="interest16" value="comedy"{{'checked="checked"' if sessionUser['interest16'] else ""}}> Comedy<br>
+                                <input type="checkbox" class="form-control" name="interest17" value="drama"{{'checked="checked"' if sessionUser['interest17'] else ""}}> Drama<br>
+                                <input type="checkbox" class="form-control" name="interest18" value="indy"{{'checked="checked"' if sessionUser['interest18'] else ""}}> Indy
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <br><br>
             <div class="form-group">
                 Custom Interest:
-                <input type="text" class="form-control" name="customInterest" >
+                <input type="text" class="form-control" name="interest19">
             </div>
         </fieldset>
-        <button type="submit" class="btn btn-primary btn-block">Continue</button>
+        <button type="submit">Continue</button>
     </form>
 
 </body>
