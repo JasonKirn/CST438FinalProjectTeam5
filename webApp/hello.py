@@ -18,7 +18,7 @@ from tweepy.streaming import StreamListener
 
 consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
 consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
-callback = 'http://cst438-final-project-jared-long3686.c9users.io:8080/callback'
+callback = 'cst438finalproject-alex-aalkire.c9users.io:8080/callback'
 
 
 app = Flask(__name__)
