@@ -6,7 +6,7 @@ from flask import Flask, render_template, url_for, request, session, redirect, m
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
-session
+
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
@@ -45,6 +45,10 @@ def setInterest(userName, index, interest):
     interestString='interest' + str(index)
     updateEntry(userName, interestString, interest)
     
+
+
+#login_manager = LoginManager()
+
 # Host home.html as the home directory webpage (at '/').
 @app.route('/')
 def hello():
@@ -56,12 +60,6 @@ def hello():
         
     return render_template('login.html')
 
-#DELETE
-@app.route('/testUser')
-def testUser():
-    thisUser = getUser(session['username'])
-    return thisUser['name']
-    
 @app.route('/friendlist')
 def friendlist():
     return render_template('friendList.html', user=getUser(session['username']));
@@ -227,6 +225,8 @@ def testPost():
 def test():
     if 'username' in session:
         user = getUser(session['username'])
+        for userCursor in users.find():
+            return userCursor['name']
         return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
         
 #Accessed by adding on /add to url.  It will insert a sample user into mlab db
@@ -242,7 +242,6 @@ def login():
     
     if loginUser is not None:
         isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
-
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
@@ -263,28 +262,22 @@ def register():
             session['username'] = request.form['username']
             userName = session['username']
             updateEntry(userName, 'profileStatus', '')
-            
             setFriend(userName,1,'dog')
             setFriend(userName,2,'fish')
             setFriend(userName,3,'duck')
             for i in range(4,11):
                 setFriend(userName,i,'')
-
             setNotification(userName,1,'I am notification 1')
             setNotification(userName,2,'I am notification 2')
             for i in range(3,11):
                 setNotification(userName,i,'')
-
             return redirect(url_for('editprofile'))
-            
         return 'Username already exists'
-        
     #request.method is GET
     return render_template('register.html')
 
 @app.route('/editprofile', methods=['POST', 'GET'])
 def editprofile():
-    
     if request.method == 'POST':
         sessionUser = getUser(session['username'])
         #Notes:
@@ -292,15 +285,28 @@ def editprofile():
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
         userName = session['username']
-        for i in range(1,5):
+        for i in range(1,19):
             setInterest(userName, i, request.form.get('interest'+str(i)))
-        
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
-
-        return redirect(url_for('home'))
-
+		return redirect(url_for('home'))
     #request.method is GET
     return render_template('editProfile.html')
+    
+#Code for getting matches between users
+@app.route('/matches')
+def matches():
+    matchScores = []
+    users = mongo.db.siteUsers
+    user = users.find_one({'name': session['username']})
+    print(user.keys())
+    for iterUser in users.find():
+        if iterUser == user: continue
+        score = sum([iterUser[i] == user[i] for i in INTERESTS if i in iterUser and i in user])
+        if score > 3:
+            matchScores.append((score, iterUser['name'], iterUser))
+    ranked_matches = sorted(matchScores, reverse=True)
+    matched_users = [x[2] for x in ranked_matches[:5]]
+    return render_template('matches.html', user=user, matched_users=matched_users)
 
 @app.route('/updateStatus', methods=['POST'])
 def btnTest():
