@@ -7,6 +7,9 @@ from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
 import tweepy
+from tweepy import Stream
+from tweepy.streaming import StreamListener
+
 
 
 #from flask_bcrypt import bcrypt
@@ -92,10 +95,25 @@ def request_twitter():
     
     session['twitterUser'] = user.screen_name
     
+    twitterUserName = user.screen_name
+    
+    twitterFileName = twitterUserName + ".txt"
+    
     public_tweets = api.user_timeline()
+    
+    myTweetFile = open(twitterFileName,'w')
+    
+    for i in range(0,10):
+        myTweetFile.write(public_tweets[i].text.encode('utf-8'))
+        myTweetFile.write("\n")
+    
+    myTweetFile.close()
+    #session['twitterFirstTweet'] = public_tweets[1].text
+    #session['twitterSecondTweet'] = public_tweets[2].text
     #for tweet in public_tweets:
-        #print tweet.text
+       # allTweets += str(tweet.text)
     #return render_template('sessionUser.html', singleTweet = singleTweet)
+    
     return redirect(url_for('editprofile'))
 
 
@@ -110,7 +128,6 @@ def user(siteUser):
     user = users.find_one({'name' : siteUser})
     sessionUser = session['username']
     twitterUser = session['twitterUser']
-    #twitterTimeline = session['twitterTimeline']
     
     print twitterUser
     
