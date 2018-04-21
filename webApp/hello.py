@@ -5,7 +5,6 @@ import pymongo
 from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
-from flask_login import LoginManager, login_user
 import bcrypt
 
 app = Flask(__name__)
