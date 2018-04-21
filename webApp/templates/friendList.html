@@ -1,0 +1,39 @@
+{% include "dashboard.html" %}
+<!DOCTYPE html>
+<html>
+    <body>
+    <h1>Friends:</h1>
+        <ul>
+            {% if user.friend1 != "" %}
+                <li>{{user.friend1}}</li>
+            {% endif %}
+            {% if user.friend2 != "" %}
+                <li>{{user.friend2}}</li>
+            {% endif %}
+            {% if user.friend3 != "" %}
+                <li>{{user.friend3}}</li>
+            {% endif %}
+            {% if user.friend4 != "" %}
+                <li>{{user.friend4}}</li>
+            {% endif %}
+            {% if user.friend5 != "" %}
+                <li>{{user.friend5}}</li>
+            {% endif %}
+            {% if user.friend6 != "" %}
+                <li>{{user.friend6}}</li>
+            {% endif %}
+            {% if user.friend7 != "" %}
+                <li>{{user.friend7}}</li>
+            {% endif %}
+            {% if user.friend8 != "" %}
+                <li>{{user.friend8}}</li>
+            {% endif %}
+            {% if user.friend9 != "" %}
+                <li>{{user.friend9}}</li>
+            {% endif %}
+            {% if user.friend10 != "" %}
+                <li>{{user.friend10}}</li>
+            {% endif %}
+        </ul>
+    </body>
+</html>

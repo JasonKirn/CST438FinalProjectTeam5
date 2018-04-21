@@ -1,10 +1,11 @@
 {% include "dashboard.html" %}
 <html>
-<a href="{{ url_for('editprofile') }}">Edit Profile</a>
 
+<a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
 <body>
 
     <h1>User: {{ user.name }}</h1>
+    <div>{{ user.profileDescription }}</div>
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
