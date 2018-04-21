@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import os
 import pprint
 import pymongo
@@ -27,7 +28,7 @@ def hello():
     #but currently just logs out for faster testing, changing later
     #if it doesn't redirect to logout, the login state will be persistent
     if 'username' in session:
-        return redirect(url_for('logout'))
+        return redirect(url_for('home'))
         
     return render_template('login.html')
 
@@ -37,9 +38,89 @@ def admin():
     if 'username' in session:
         return redirect(url_for('home'))
     admin = mongo.db.siteAdmin
+
+#deals with the actual transaction of adding a friend
+@app.route('/friendrequests')
+def friendrequest():
+    return ""
+
+@app.route('/acceptrequest')
+def acceptrequest():
+    return ""
+
+@app.route('/declinerequest')
+def declinerequest():
+    return ""
+
+#Deals with friend requests and status update notifications
+@app.route('/notifications')
+def notifications():
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    #MAY NEED AJAX HERE DUE TO ASYNCH?
     
-  
+    #create empty array of 10 slots for notifications
+    notificationArray = [None] * 10
     
+    #return user['notification1']
+    
+    #grab all notifications for current user
+    for x in range(1, 11):
+        notificationString = 'notification' + str(x)
+        #return notificationString
+        #build array of notifications    
+        if notificationString in user:
+            notificationArray[x-1] = notificationString
+            #user[notificationString]
+        else:
+            continue;
+    
+    #return/print the prebuilt list
+    beep = notificationArray[1];
+    #return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
+
+    #notificationCount = len(notificationArray)
+
+    return render_template('notifications.html', user=user, notificationArray=notificationArray);
+    
+#Currently making endpoint to test adding friends to a user
+@app.route('/addfriend/<userToAdd>')
+def addfriend(userToAdd):
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    otherUser = users.find_one({'name' : userToAdd })
+    #if userToAdd is not None:
+    #    return "This is the username: " + userToAdd
+    
+    for x in range(1, 11):
+        friendString = 'friend' + str(x)
+        #friend(x) slot is found, keep looking for new friend slot
+        #Note: This syntax must be used to check over nonexistant dict's, otherwise keyError
+        if friendString in user:
+            continue
+        #friend(x) is not found, add new friend(x)
+        else:
+            #Use this code for when a user accepts the friend request
+            #users.update(
+            #    { 'name' : session['username'] },
+            #    { '$set' : { friendString : userToAdd } }
+            #)
+            for y in range(1, 11):
+                notificationString = 'notification' + str(y)
+                if notificationString in otherUser:
+                    continue
+                else:
+                    notificationMessage = "Friend request from " + session['username']
+                    users.update(
+                        { 'name' : userToAdd },
+                        { '$set' : { notificationString : notificationMessage } }
+                    )
+                    break;
+                
+            return "Friend request sent to " + userToAdd;
+            #return "New friend " + userToAdd + " added, you (" + session['username'] + ") currently have " + str(x) + " friends" 
+    
+    return "10 friends already added"
     
 
 @app.route('/home')
@@ -60,6 +141,7 @@ def user(siteUser):
     
     users = mongo.db.siteUsers
     user = users.find_one({'name' : siteUser})
+    sessionUser = session['username']
     
     if user is not None:
         posts = [
@@ -67,7 +149,11 @@ def user(siteUser):
         ]
         #TODO: Figure out why user variable won't show up on user.html even though it's passed
         #and used in the same way it is used in the tutorial.
-        return render_template('user.html', user=user, posts=posts )
+        #return siteUser + "   " + sessionUser
+        if siteUser == sessionUser:
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
+        else:
+            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
         #return statement works, return a template now
         #return "This is the userpage of " + siteUser
 
@@ -118,6 +204,36 @@ def register():
             #create session for newly registered user
             session['username'] = request.form['username']
             
+            #set the user's 10 friendslots to null once their account is created
+            #users.update(
+            #    { 'name': session['username'] },
+            #    { '$push': { 'friends' : {
+            #        'friend1' : '',
+            #        'friend2' : '',
+            #        'friend3' : '',
+            #        'friend4' : '',
+            #        'friend5' : '',
+            #        'friend6' : '',
+            #        'friend7' : '',
+            #        'friend8' : '',
+            #        'friend9' : '',
+            #        'friend10' : ''}}}
+            #)
+            users.update(
+                { 'name': session['username'] },
+                { '$set' : { 'friend1' : 'dog', 'friend2' : 'fish', 'friend3' : 'duck' } }
+            )
+            #users.update(
+            #    { 'name': session['username'] },
+            #    { '$push': { 'friends' : { '$each': ['testFriend1', '', '', '', '', '', '', '', '', ''] }}}
+            #)
+            
+            
+            #users.update(
+            #   { 'name': session['username'] },
+            #   { '$push': { 'scores': { '$each': [ 90, 92, 85 ] } } }
+            #)
+            
             return redirect(url_for('editprofile'))
             
         return 'Username already exists'
@@ -138,13 +254,14 @@ def editprofile():
         #1. request.form.get is needed for optional form fields
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
+        
+        
         users.update(
             { 'name': session['username'] },
-            { '$set': { 'colorInterests' : {
-                'interest1' : request.form.get('interest1'),
+            { '$set': {'interest1' : request.form.get('interest1'),
                 'interest2' : request.form.get('interest2'),
                 'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}}#,
+                'interest4' : request.form.get('interest4')}}#,
             #{ '$push': {'profileDescription' : request.form.get('profileDescription')}}
         )
         
@@ -193,4 +310,5 @@ def getcookie():
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
     app.run(host=os.getenv('IP', '0.0.0.0'),port=int(os.getenv('PORT', 8080)), debug=True)
-    #app.run
+    #app.run()
+    
