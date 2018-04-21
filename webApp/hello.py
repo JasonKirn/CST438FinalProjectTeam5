@@ -6,7 +6,7 @@ from flask import Flask, render_template, url_for, request, session, redirect, m
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
-
+session
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
@@ -18,6 +18,33 @@ app.config['SECRET_KEY'] = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
 mongo = PyMongo(app)
 
+def getUser(name):
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : name})
+    return user
+
+def updateEntry(userName, key, value):
+    users = mongo.db.siteUsers
+    users.update(
+        { 'name' : userName },
+        { '$set' : { key : value } }
+    )
+def newUser(name, hashedPass):
+    users = mongo.db.siteUsers
+    users.insert({'name' : name, 'password' : hashedPass})
+
+def setFriend(userName, index, friendName):
+    friendString = 'friend' + str(index)
+    updateEntry(userName, friendString, friendName)
+
+def setNotification(userName, index, message):
+    notificationString = 'notification' + str(index)
+    updateEntry(userName, notificationString, message)
+    
+def setInterest(userName, index, interest):
+    interestString='interest' + str(index)
+    updateEntry(userName, interestString, interest)
+    
 # Host home.html as the home directory webpage (at '/').
 @app.route('/')
 def hello():
@@ -29,22 +56,23 @@ def hello():
         
     return render_template('login.html')
 
+#DELETE
+@app.route('/testUser')
+def testUser():
+    thisUser = getUser(session['username'])
+    return thisUser['name']
+    
 @app.route('/friendlist')
 def friendlist():
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-
-    return render_template('friendList.html', user=user);
+    return render_template('friendList.html', user=getUser(session['username']));
 
 @app.route('/acceptrequest/<notification>')
 def acceptrequest(notification):
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-    
+    user = getUser(session['username'])
     notificationString = user[notification]
     otherUserName = notificationString[20:len(notificationString)]
     
-    otherUser = users.find_one({'name' : otherUserName})
+    otherUser = getUser(otherUserName)
 
     otherUserFullFriendList = False
     otherUserFriendSlot = ""
@@ -78,45 +106,27 @@ def acceptrequest(notification):
     if userFullFriendList == True:
         return "Cannot add friend. Your friend list is full."
         
-    users.update(
-        { 'name' : session['username'] },
-        { '$set' : {
-            notification : "",
-            userFriendSlot : otherUserName } }
-    )    
-    
-    users.update(
-        { 'name' : otherUserName },
-        { '$set' : { otherUserFriendSlot : session['username'] } }
-    )
-    
+    updateEntry(session['username'], notification, "")
+    updateEntry(session['username'], userFriendSlot, otherUserName)
+    updateEntry(otherUserName, otherUserFriendSlot, session['username'])
     return redirect(url_for('notifications'))
 
 @app.route('/declinerequest/<notification>')
 def declinerequest(notification):
     users = mongo.db.siteUsers
-
-    users.update(
-        { 'name' : session['username'] },
-        { '$set' : { notification : "" } }
-    )
-    
+    updateEntry(session['username'], notification, "")
     return redirect(url_for('notifications'))
 
 #Deals with friend requests and status update notifications
 @app.route('/notifications')
 def notifications():
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-
-    return render_template('notifications.html', user=user);
+    return render_template('notifications.html', user=getUser(session['username']));
     
 #Currently making endpoint to test adding friends to a user
 @app.route('/addfriend/<userToAdd>')
 def addfriend(userToAdd):
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-    otherUser = users.find_one({'name' : userToAdd })
+    user = getUser(session['username'])
+    otherUser = getUser(userToAdd)
 
     fullUserFriendList = False
     fullOtherUserFriendList = False
@@ -153,10 +163,7 @@ def addfriend(userToAdd):
         
         if otherUser[notificationString] == '':
             notificationMessage = "Friend request from " + session['username']
-            users.update(
-                { 'name' : userToAdd },
-                { '$set' : { notificationString : notificationMessage } }
-            )
+            updateEntry(userToAdd, notificationString, notificationMessage)
             return "Friend request sent to " + userToAdd
         else:
             fullNotificationList = True
@@ -175,9 +182,11 @@ def addfriend(userToAdd):
                         
 @app.route('/home')
 def home():
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : session['username']})
-    return render_template('home.html', statusPageText=user['profileStatus'])
+    user = getUser(session['username'])
+    if(user['profileStatus'] is None):
+        return render_template('home.html')
+    else:
+        return render_template('home.html', statusPageText=user['profileStatus'])
     
 @app.route('/logout')
 def logout():
@@ -191,9 +200,8 @@ def user(siteUser):
     if 'username' not in session:
         return render_template('login.html')
     
-    users = mongo.db.siteUsers
-    user = users.find_one({'name' : siteUser})
-    sessionUser = session['username']
+    user = getUser(siteUser)
+    sessionUser = getUser(session['username'])
     
     if user is not None:
         posts = [
@@ -218,21 +226,19 @@ def testPost():
 @app.route('/test')
 def test():
     if 'username' in session:
-        users = mongo.db.siteUsers
-        user = users.find_one({'name' : session['username']})
+        user = getUser(session['username'])
         return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
         
 #Accessed by adding on /add to url.  It will insert a sample user into mlab db
 @app.route('/add')
 def addSiteUser():
-    user = mongo.db.siteUsers
-    user.insert({'name' : 'testUserName'})
+    users = mongo.db.siteUsers
+    users.insert({'name' : 'testUserName'})
     return 'Added User!'
     
 @app.route('/login', methods=['POST'])
 def login():
-    users = mongo.db.siteUsers
-    loginUser = users.find_one({'name' : request.form['username']})
+    loginUser = getUser(request.form['username'])
     
     if loginUser is not None:
         isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
@@ -248,46 +254,27 @@ def login():
 def register():
     
     if request.method == 'POST':
-        users = mongo.db.siteUsers
-        #check if username already exists
-        existingUser = users.find_one({'name' : request.form['username']})
+        existingUser = getUser(request.form['username'])
         
         if existingUser is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
-            users.insert({'name' : request.form['username'], 'password' : hashpass})
+            newUser(request.form['username'], hashpass)
             #create session for newly registered user
             session['username'] = request.form['username']
+            userName = session['username']
+            updateEntry(userName, 'profileStatus', '')
             
-            users.update(
-                { 'name': session['username'] },
-                { '$set' : { 
-                    'friend1' : 'dog', 
-                    'friend2' : 'fish',
-                    'friend3' : 'duck',
-                    'friend4' : '',
-                    'friend5' : '',
-                    'friend6' : '',
-                    'friend7' : '',
-                    'friend8' : '',
-                    'friend9' : '',
-                    'friend10' : '' } }
-            )
-            
-            users.update(
-                { 'name' : session['username'] },
-                { '$set' : { 
-                    'notification1' : 'I am notification 1',
-                    'notification2' : 'I am notification 2',
-                    'notification3' : '',
-                    'notification4' : '',
-                    'notification5' : '',
-                    'notification6' : '',
-                    'notification7' : '',
-                    'notification8' : '',
-                    'notification9' : '',
-                    'notification10' : ''} }
-            )
-            
+            setFriend(userName,1,'dog')
+            setFriend(userName,2,'fish')
+            setFriend(userName,3,'duck')
+            for i in range(4,11):
+                setFriend(userName,i,'')
+
+            setNotification(userName,1,'I am notification 1')
+            setNotification(userName,2,'I am notification 2')
+            for i in range(3,11):
+                setNotification(userName,i,'')
+
             return redirect(url_for('editprofile'))
             
         return 'Username already exists'
@@ -299,29 +286,17 @@ def register():
 def editprofile():
     
     if request.method == 'POST':
-        users = mongo.db.siteUsers
-        
-        #find the current session user in the database
-        sessionUser = users.find_one({'name' : session['username']})
-
+        sessionUser = getUser(session['username'])
         #Notes:
         #1. request.form.get is needed for optional form fields
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
+        userName = session['username']
+        for i in range(1,5):
+            setInterest(userName, i, request.form.get('interest'+str(i)))
         
-        users.update(
-            { 'name': session['username'] },
-            { '$set': {'interest1' : request.form.get('interest1'),
-                'interest2' : request.form.get('interest2'),
-                'interest3' : request.form.get('interest3'),
-                'interest4' : request.form.get('interest4')}}
-        )
-        
-        users.update(
-            { 'name': session['username'] },
-            { '$set': { 'profileDescription' : request.form.get('profileDescription')}}
-        )
-        
+        updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
+
         return redirect(url_for('home'))
 
     #request.method is GET
@@ -331,13 +306,9 @@ def editprofile():
 def btnTest():
     if request.method == 'POST':
         if 'username' in session:
-            users = mongo.db.siteUsers
-            sessionUser = users.find_one({'name' : session['username']})
+            sessionUser = getUser(session['username'])
             myStatus = request.form['statusTextField']
-            users.update(
-                { 'name': session['username'] },
-                { '$set': { 'profileStatus' : request.form.get('statusTextField')}}
-            )
+            updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
         return render_template('home.html', statusPageText=myStatus)
         #return welcome+""+statusText+"\n"+dbStatus
     return "Null; bad return."
