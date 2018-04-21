@@ -6,7 +6,7 @@ from flask import Flask, render_template, url_for, request, session, redirect, m
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
-
+#test
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 
