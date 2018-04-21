@@ -1,0 +1,15 @@
+{% include "dashboard.html" %}
+<!DOCTYPE html>
+<html>
+
+<body>
+    <h1>Hi {{ user.name }}!</h1>
+    <h2>These are the {{ matched_users|count }} people you have most in common with.</h2>
+    <ul>
+        {% for user in matched_users %}
+        <li><a href="/users/{{ user['name'] }}">{{ user.name }}</a></li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

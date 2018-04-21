@@ -188,9 +188,10 @@ def addfriend(userToAdd):
                         
 @app.route('/home')
 def home():
+    
     user = getUser(session['username'])
     if(user['profileStatus'] is None):
-        return render_template('home.html')
+        return render_template('home.html', user=user)
     else:
         return render_template('home.html', statusPageText=user['profileStatus'])
     
