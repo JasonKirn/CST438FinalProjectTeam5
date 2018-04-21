@@ -215,8 +215,7 @@ def user(siteUser):
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
-
-        if siteUser == sessionUser:
+        if siteUser == sessionUser['name']:
             return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
         else:
             return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
