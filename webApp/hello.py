@@ -306,9 +306,7 @@ def editprofile():
 @app.route('/matches')
 def matches():
     matchScores = []
-    users = mongo.db.siteUsers
-    user = users.find_one({'name': session['username']})
-    print(user.keys())
+    user = getUser(session['username'])
     for iterUser in users.find():
         if iterUser == user: continue
         score = sum([iterUser[i] == user[i] for i in INTERESTS if i in iterUser and i in user])
