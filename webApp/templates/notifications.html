@@ -2,19 +2,59 @@
 <!DOCTYPE html>
 <html>
     <body>
-    <h1>Friend Requests: {{user.notification1}}</h1>
+    <h1>Friend Requests:</h1>
         <ul>
-            {% if user.notification11 is Null %}
-                <li>test</li>
+            {% if user.notification1 != "" %}
+                <li>{{user.notification1}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification1') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification1') }}';">Decline</button>
             {% endif %}
-            <!--always loops 10 times-->
-            {% for notification in notificationArray %}
-            <!--                                                            If can't figure out join, then unwind loop
-                <li>{{ notification|e }}</li><li>{{loop.index}}</li><li>{{user.notification|join(loop.index)}}</li>
-                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest') }}';">Accept</button>
-                <button type="button" onclick="window.location.href='{{ url_for('declinerequest') }}';">Decline</button>
-            -->
-            {% endfor %}
+            {% if user.notification2 != "" %}
+                <li>{{user.notification2}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification2') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification2') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification3 != "" %}
+                <li>{{user.notification3}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification3') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification3') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification4 != "" %}
+                <li>{{user.notification4}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification4') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification4') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification5 != "" %}
+                <li>{{user.notification5}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification5') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification5') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification6 != "" %}
+                <li>{{user.notification6}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification6') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification6') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification7 != "" %}
+                <li>{{user.notification7}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification7') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification7') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification8 != "" %}
+                <li>{{user.notification8}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification8') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification8') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification9 != "" %}
+                <li>{{user.notification9}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification9') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification9') }}';">Decline</button>
+            {% endif %}
+            {% if user.notification10 != "" %}
+                <li>{{user.notification10}}</li>
+                <button type="button" onclick="window.location.href='{{ url_for('acceptrequest', notification='notification10') }}';">Accept</button>
+                <button type="button" onclick="window.location.href='{{ url_for('declinerequest', notification='notification10') }}';">Decline</button>
+            {% endif %}
+
         </ul>
 
     </body>

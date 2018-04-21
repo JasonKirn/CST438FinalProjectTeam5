@@ -5,6 +5,7 @@
 <body>
 
     <h1>User: {{ user.name }}</h1>
+    <div>{{ user.profileDescription }}</div>
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
