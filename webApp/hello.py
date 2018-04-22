@@ -217,17 +217,21 @@ def user(siteUser):
     
     user = getUser(siteUser)
     sessionUserName = session['username']
-    twitterUser = session['twitterUser']
-    twitterUserLink = session['twitterUserLink']
+    
+    twitterUser = getUser(siteUser)
+    print(twitterUser)
+    print(siteUser)
+    twitterUserLink = twitterUser['twitterUserLink']
+    twitterUser = twitterUser['twitterUser']
     
     if user is not None:
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
         if siteUser == sessionUserName:
-            return render_template('sessionUser.html', user=user, siteUser=siteUserName, posts=posts)
+            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
-            return render_template('user.html', sessionUser=sessionUserName, user=user, posts=posts )
+            return render_template('user.html', sessionUser=sessionUserName, user=user, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
@@ -391,17 +395,11 @@ def request_twitter():
     token, token_secret = session['token']
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
     auth.set_access_token(token, token_secret)
-    
-   
     api = tweepy.API(auth)
-    
-    
     user = api.me()
-    
-    session['twitterUser'] = user.screen_name
-    
+    updateEntry(session['username'], 'twitterUser', user.screen_name)
     #instead of session, twitterUserLink would be stored in the database
-    session['twitterUserLink'] = "https://twitter.com/" + user.screen_name
+    updateEntry(session['username'], 'twitterUserLink', "https://twitter.com/" + user.screen_name)
     
     #twitterUserName = user.screen_name
     
