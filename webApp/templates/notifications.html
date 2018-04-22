@@ -1,6 +1,13 @@
 {% include "dashboard.html" %}
 <!DOCTYPE html>
 <html>
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
     <body>
     <h1>Friend Requests:</h1>
         <ul>

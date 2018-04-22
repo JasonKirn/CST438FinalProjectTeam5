@@ -12,14 +12,13 @@
         <div id = "profile">
             <h2> Welcome {{user.name}} </h2>
         </div>
-        <h2>Your Status: {{statusPageText}}</h2>
+        <h2>Your Status: {{user.profileStatus}}</h2>
         <br>
         <form action="/updateStatus" method="post">
             <input type="text" name="statusTextField"></input>
             <br>
             </a><input type="submit" class="btn btn-default" value="Post!" name="statusTextPost" ></button>
         </form>
-        <h2>DEBUG: {{debug}}</h2>
         
         <div id="connections">
             <h2> Find Users with Similar Interests</h2>

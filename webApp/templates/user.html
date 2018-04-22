@@ -1,6 +1,12 @@
 {% include "dashboard.html" %}
 <html>
-
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for message in messages %}
+            <div>{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 <a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
 
 <head>

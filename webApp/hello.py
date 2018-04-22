@@ -2,7 +2,7 @@
 import os
 import pprint
 import pymongo
-from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory
+from flask import Flask, flash, render_template, url_for, request, session, redirect, make_response, send_from_directory
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
@@ -94,7 +94,8 @@ def acceptrequest(notification):
             otherUserFullFriendList = True
             
     if otherUserFullFriendList == True:
-        return "Cannot add friend." + otherUserName + "'s friend list is full."
+        flash("Cannot add friend. " + otherUserName + "'s friend list is full.")
+        return redirect(url_for('notifications'))
         
     userFullFriendList = False
     userFriendSlot = ""
@@ -110,7 +111,8 @@ def acceptrequest(notification):
             userFullFriendList = True
     
     if userFullFriendList == True:
-        return "Cannot add friend. Your friend list is full."
+        flash("Cannot add friend. Your friend list is full.")
+        return redirect(url_for('notifications'))
         
     updateEntry(session['username'], notification, "")
     updateEntry(session['username'], userFriendSlot, otherUserName)
@@ -149,7 +151,8 @@ def addfriend(userToAdd):
             fullUserFriendList = True
     
     if fullUserFriendList == True:
-        return "Cannot send request to " + userToAdd + ". Your friend list is full."
+        flash("Cannot send request to " + userToAdd + ". Your friend list is full.")
+        return redirect(url_for('user', siteUser=userToAdd))
     
     #checking if their friend list has open slots
     for x in range(1, 11):
@@ -162,7 +165,8 @@ def addfriend(userToAdd):
             fullOtherUserFriendList = True
             
     if fullOtherUserFriendList == True:
-        return "Cannot send request to " + userToAdd + ". Their friend list is full."
+        flash("Cannot send request to " + userToAdd + ". Their friend list is full.")
+        return redirect(url_for('user', siteUser=userToAdd))
         
     for x in range(1, 11):
         notificationString = 'notification' + str(x)
@@ -170,11 +174,13 @@ def addfriend(userToAdd):
         if otherUser[notificationString] == '':
             notificationMessage = "Friend request from " + session['username']
             updateEntry(userToAdd, notificationString, notificationMessage)
-            return "Friend request sent to " + userToAdd
+            flash("Friend request sent to " + userToAdd)
+            return redirect(url_for('user', siteUser=userToAdd))
         else:
             fullNotificationList = True
-        
-    return "There was an error in adding the other user"
+    
+    flash("Error in adding " + userToAdd)
+    return redirect(url_for('user', siteUser=userToAdd))
 
 #@app.route('/statusNotifyFriends')
 #def statusUpdate():
@@ -190,11 +196,11 @@ def addfriend(userToAdd):
 def home():
     
     user = getUser(session['username'])
-    if(user['profileStatus'] is None):
-        return render_template('home.html', user=user)
+    if(user is None):
+        return render_template('login.html')
     else:
-        return render_template('home.html', statusPageText=user['profileStatus'])
-    
+        return render_template('home.html', user=user)
+
 @app.route('/logout')
 def logout():
     session.clear()
@@ -298,15 +304,17 @@ def editprofile():
             setInterest(userName, i, request.form.get('interest'+str(i)))
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
         updateEntry(userName, 'avatarImage', request.form.get('profileCharacter'))
-        return render_template('home.html', debug=request.form.get('profileCharacter'))
+        return render_template('home.html', user=sessionUser)
         #return redirect(url_for('home')
+        #4/21 FIX
     #request.method is GET
     return render_template('editProfile.html', sessionUser=sessionUser)
-    
+
 #Code for getting matches between users
 @app.route('/matches')
 def matches():
     matchScores = []
+    users = mongo.db.siteUsers
     user = getUser(session['username'])
     for iterUser in users.find():
         if iterUser == user: continue
@@ -320,12 +328,11 @@ def matches():
 @app.route('/updateStatus', methods=['POST'])
 def btnTest():
     if request.method == 'POST':
-        if 'username' in session:
-            sessionUser = getUser(session['username'])
-            myStatus = request.form['statusTextField']
-            updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
-        return render_template('home.html', statusPageText=myStatus)
-        #return welcome+""+statusText+"\n"+dbStatus
+	    sessionUser = getUser(session['username'])
+	    if 'username' in session:
+		    myStatus = request.form['statusTextField']
+		    updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
+	    return render_template('home.html', user=sessionUser)
     return "Null; bad return."
 
 
