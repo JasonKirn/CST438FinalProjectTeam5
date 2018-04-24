@@ -256,7 +256,7 @@ def login():
     loginUser = getUser(request.form['username'])
     
     if loginUser is not None:
-        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
+        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8')) == loginUser['password'].encode('utf-8')
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
