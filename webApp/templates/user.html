@@ -1,10 +1,43 @@
 {% include "dashboard.html" %}
 <html>
+<head>
+    <style>
+        #map {
+            height: 350px;
+            width: 350px;
+        }
 
-<a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
+</head>
 <body>
 
     <h1>User: {{ user.name }}</h1>
+    <a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
+    {% if user.lat is not none and user.lng is not none %}
+    <div id="map"></div>
+    <script>
+        var map, infoWindow;
+
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: JSON.parse('{{ user.location|safe }}'),
+                zoom: 7,
+                disableDefaultUI: true,
+                gestureHandling: 'none'
+            });
+            infoWindow = new google.maps.InfoWindow;
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSBN9WKWNW7zdGPXgalQkmTUZ_KssX7g&libraries=places&callback=initMap"
+         async defer></script>
+    {% endif %}
     <div>{{ user.profileDescription }}</div>
     <hr> {% for post in posts %}
     <p>

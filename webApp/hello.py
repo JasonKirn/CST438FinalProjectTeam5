@@ -2,10 +2,9 @@
 import os
 import pprint
 import pymongo
-from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify
+from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify, json
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
-from flask_login import LoginManager, login_user
 import bcrypt
 from key import key
 import requests
@@ -36,14 +35,6 @@ def hello():
         return redirect(url_for('home'))
         
     return render_template('login.html')
-
-@app.route("/testGoogle", methods=["GET"])
-def retrieve():
-    return render_template('googleApiLayout.html')
-
-@app.route("/googleApi/<location>")
-def googleApi(location):
-    return render_template('googleApi.html', location=location)
 
 @app.route("/sendRequest/<string:query>")
 def results(query):
@@ -310,6 +301,21 @@ def register():
         
     #request.method is GET
     return render_template('register.html')
+    
+@app.route('/updatelocation', methods=['POST'])
+def updatelocation():
+    
+    location = json.loads(request.data)
+    
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    users.update(
+        { 'name': session['username'] },
+        {'$set': {'location': '{{"lat": {}, "lng": {}}}'.format(location['lat'], location['lng']) }
+        })
+        
+    return 'OK'
+    
 
 @app.route('/editprofile', methods=['POST', 'GET'])
 def editprofile():

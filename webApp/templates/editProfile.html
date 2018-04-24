@@ -2,6 +2,23 @@
 
 <head>
     <meta charset- "utf-8"/>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <style>
+        #map {
+            height: 500px;
+            width: 500px;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+
+        html,
+        body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,7 +52,7 @@
                     <option value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
                 </select> <br/>
             <br>
-            <img id="profilePicture" name = "profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
+            <img id="profilePicture" name="profilePicture" src="{{url_for('static',filename ='default.png')}}" alt="User Image" />
             <!-- TODO: Some call to get the names of characters from that genre -->
 
             <script type="text/javascript">
@@ -92,8 +109,6 @@
             <script>
                 var acc = document.getElementsByClassName("accordion");
                 var i;
-                acc[i].preventDefault();
-
                 for (i = 0; i < acc.length; i++) {
                     acc[i].addEventListener("click", function() {
                         this.classList.toggle("active");
@@ -115,7 +130,58 @@
         </fieldset>
         <button type="submit">Continue</button>
     </form>
+    <div id="map"></div>
+    <script>
+        var map, infoWindow;
 
+        function initMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 39.8283, lng: -98.5795 },
+                zoom: 7,
+                disableDefaultUI: true,
+                gestureHandling: 'none'
+            });
+            infoWindow = new google.maps.InfoWindow;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+
+                    };
+
+                    infoWindow.setPosition(pos);
+                    infoWindow.setContent('Location found.');
+                    infoWindow.open(map);
+                    map.setCenter(pos);
+                    
+                    // update location
+                    var request = new XMLHttpRequest();
+                    request.open("POST", "{{ url_for('updatelocation') }}");
+                    request.setRequestHeader("Content-Type", "application/json");
+                    request.send(JSON.stringify(pos));
+                }, function() {
+                    handleLocationError(true, infoWindow, map.getCenter());
+                });
+            }
+            else {
+                // Browser doesn't support Geolocation
+                handleLocationError(false, infoWindow, map.getCenter());
+            }
+        }
+
+        function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+            infoWindow.setPosition(pos);
+            infoWindow.setContent(browserHasGeolocation ?
+                'Error: The Geolocation service failed.' :
+                'Error: Your browser doesn\'t support geolocation.');
+            infoWindow.open(map);
+        }
+    </script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSBN9WKWNW7zdGPXgalQkmTUZ_KssX7g&callback=initMap">
+    </script>
 </body>
 
 </html>

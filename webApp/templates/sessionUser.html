@@ -5,8 +5,7 @@
 <body>
 
     <h1>User: {{ user.name }}</h1>
-    <h2>Location: Tempp</h2>
-    <a href="{{ url_for('googleApi', location=user.location) }}">See this location via google maps</a>
+    <h2>Location: Temp</h2>
     <hr> {% for post in posts %}
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
