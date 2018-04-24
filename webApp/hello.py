@@ -72,7 +72,6 @@ def hello():
     #if it doesn't redirect to logout, the login state will be persistent
     if 'username' in session:
         return redirect(url_for('home'))
-        
     return render_template('login.html')
 
 @app.route('/friendlist')
@@ -86,7 +85,9 @@ def acceptrequest(notification):
     otherUserName = notificationString[20:len(notificationString)]
     
     otherUser = getUser(otherUserName)
-
+    #FIXUP May want different functionality here for no source user.
+    if(otherUser is None):
+        return redirect(url_for('notifications'))
     otherUserFullFriendList = False
     otherUserFriendSlot = ""
     
@@ -195,7 +196,6 @@ def addfriend(userToAdd):
                         
 @app.route('/home')
 def home():
-    
     user = getUser(session['username'])
     if(user is None):
         return render_template('login.html')
@@ -208,30 +208,45 @@ def logout():
     session.clear()
     return redirect(url_for('hello'))
 
+def error():
+    return "Something went wrong."
+    
 #endpoint for userprofile, siteUser must be a user in the db for it to work.
 @app.route('/users/<siteUser>')
 def user(siteUser):
+    if siteUser is None:
+        return error()
     #check if a user is logged in, if not they can't view a profile and are sent to login
     if 'username' not in session:
         return render_template('login.html')
     
-    user = getUser(siteUser)
     sessionUserName = session['username']
-    
-    twitterUser = getUser(siteUser)
-    print(twitterUser)
+    selectedUser = getUser(siteUser)
+    print(selectedUser)
     print(siteUser)
-    twitterUserLink = twitterUser['twitterUserLink']
-    twitterUser = twitterUser['twitterUser']
-    
-    if user is not None:
+    if((selectedUser is not None)):
+        if('twitterUser' not in selectedUser):
+            twitterUser = None
+            twitterUserLink = None
+        else:
+            twitterUser = selectedUser['twitterUser']
+            if('twitterUserLink' not in selectedUser):
+                twitterUserLink = None
+            else:
+                twitterUserLink = selectedUser['twitterUserLink']
+
+    if selectedUser is not None:
+        
+        #FIXUP Remove posts for styling.
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
+        print(twitterUser)
+        print(twitterUserLink)
         if siteUser == sessionUserName:
-            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
+            return render_template('sessionUser.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
-            return render_template('user.html', sessionUser=sessionUserName, user=user, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
+            return render_template('user.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
@@ -261,9 +276,10 @@ def addSiteUser():
 @app.route('/login', methods=['POST'])
 def login():
     loginUser = getUser(request.form['username'])
-    
     if loginUser is not None:
-        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
+        if (loginUser['password'] is None):
+            return error()
+        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8')) == loginUser['password'].encode('utf-8')
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
@@ -273,10 +289,8 @@ def login():
 #methods makes sure it accepts POST and GET request methods
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    
     if request.method == 'POST':
         existingUser = getUser(request.form['username'])
-        
         if existingUser is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             newUser(request.form['username'], hashpass)
@@ -301,6 +315,8 @@ def register():
 @app.route('/editprofile', methods=['POST', 'GET'])
 def editprofile():
     sessionUser = getUser(session['username'])
+    if(sessionUser is None):
+        return error()
     if request.method == 'POST':
         #Notes:
         #1. request.form.get is needed for optional form fields
@@ -322,7 +338,10 @@ def editprofile():
 @app.route('/matches')
 def matches():
     matchScores = []
+    users = mongo.db.siteUsers
     user = getUser(session['username'])
+    if((users is None) or (user is None)):
+        return error()
     for iterUser in users.find():
         if iterUser == user: continue
         score = sum([iterUser[i] == user[i] for i in INTERESTS if i in iterUser and i in user])
@@ -397,10 +416,18 @@ def request_twitter():
     auth.set_access_token(token, token_secret)
     api = tweepy.API(auth)
     user = api.me()
+    if(user is None):
+        return error()
+    if(user.screen_name is None):
+        return error()
+    
     updateEntry(session['username'], 'twitterUser', user.screen_name)
     #instead of session, twitterUserLink would be stored in the database
     updateEntry(session['username'], 'twitterUserLink', "https://twitter.com/" + user.screen_name)
-    
+    print(user.screen_name)
+    usr = getUser(session['username'])
+    print(usr['twitterUser'])
+    print(usr['twitterUserLink'])
     #twitterUserName = user.screen_name
     
     #twitterFileName = "templates/" + twitterUserName + ".txt"
