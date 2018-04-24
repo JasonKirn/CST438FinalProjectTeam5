@@ -12,6 +12,8 @@
         <div id = "profile">
             <h2> Welcome {{user.name}} </h2>
         </div>
+        <a href="{{ url_for('user', siteUser=user.name) }}">My profile</a>
+        
         <h2>Your Status: {{user.profileStatus}}</h2>
         <br>
         <form action="/updateStatus" method="post">

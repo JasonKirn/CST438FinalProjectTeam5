@@ -24,6 +24,9 @@
     <p>
         {{ user.name }} says: <b>{{ post.body }}</b>
     </p>
+        {% if twitterUserLink != None %}
+            <a class="twitter-timeline" href={{twitterUserLink}} data-height = "500" data-width = "500">Tweets by {{twitterUser}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        {% endif %}
     <div>
         <div id="accordion">
             <div class="card">

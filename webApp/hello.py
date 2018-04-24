@@ -6,9 +6,17 @@ from flask import Flask, flash, render_template, url_for, request, session, redi
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
+import tweepy
+from tweepy import Stream
+from tweepy.streaming import StreamListener
 
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
+
+consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
+consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
+#NOTE: WILL PROBABLY NEED TO CHANGE WHEN DEPLOYED TO A HEROKU LINK
+callback = 'http://cst438finalproject-jasonkirn.c9users.io:8080/callback'
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -82,6 +90,10 @@ def acceptrequest(notification):
 
     otherUserFullFriendList = False
     otherUserFriendSlot = ""
+    
+    #FIXUP May want different functionality here for no source user.
+    if(otherUser is None):
+        return redirect(url_for('notifications'))    
     
     for x in range(1, 11):
         friendString = 'friend' + str(x)
@@ -194,7 +206,6 @@ def addfriend(userToAdd):
                         
 @app.route('/home')
 def home():
-    
     user = getUser(session['username'])
     if(user is None):
         return render_template('login.html')
@@ -205,26 +216,46 @@ def home():
 def logout():
     session.clear()
     return redirect(url_for('hello'))
+    
+def error():
+    return "Something went wrong."
 
 #endpoint for userprofile, siteUser must be a user in the db for it to work.
 @app.route('/users/<siteUser>')
 def user(siteUser):
+    if siteUser is None:
+        return error()
     #check if a user is logged in, if not they can't view a profile and are sent to login
     if 'username' not in session:
         return render_template('login.html')
     
-    user = getUser(siteUser)
-    sessionUser = getUser(session['username'])
-    
-    if user is not None:
+    sessionUserName = session['username']
+    selectedUser = getUser(siteUser)
+    print(selectedUser)
+    print(siteUser)
+    if((selectedUser is not None)):
+        if('twitterUser' not in selectedUser):
+            twitterUser = None
+            twitterUserLink = None
+        else:
+            twitterUser = selectedUser['twitterUser']
+            if('twitterUserLink' not in selectedUser):
+                twitterUserLink = None
+            else:
+                twitterUserLink = selectedUser['twitterUserLink']
+
+    if selectedUser is not None:
+        
+        #FIXUP Remove posts for styling.
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
-
-        if siteUser == sessionUser:
-            return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
+        print(twitterUser)
+        print(twitterUserLink)
+        if siteUser == sessionUserName:
+            return render_template('sessionUser.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
-            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
+            return render_template('user.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
@@ -256,7 +287,10 @@ def login():
     loginUser = getUser(request.form['username'])
     
     if loginUser is not None:
-        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8'))
+        if (loginUser['password'] is None):
+            return error()
+        isSamePassword = bcrypt.hashpw(request.form['pass'].encode('utf-8'), loginUser['password'].encode('utf-8')) == loginUser['password'].encode('utf-8')
+
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
@@ -266,10 +300,8 @@ def login():
 #methods makes sure it accepts POST and GET request methods
 @app.route('/register', methods=['POST', 'GET'])
 def register():
-    
     if request.method == 'POST':
         existingUser = getUser(request.form['username'])
-        
         if existingUser is None:
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             newUser(request.form['username'], hashpass)
@@ -294,6 +326,8 @@ def register():
 @app.route('/editprofile', methods=['POST', 'GET'])
 def editprofile():
     sessionUser = getUser(session['username'])
+    if(sessionUser is None):
+        return error()
     if request.method == 'POST':
         #Notes:
         #1. request.form.get is needed for optional form fields
@@ -316,6 +350,8 @@ def matches():
     matchScores = []
     users = mongo.db.siteUsers
     user = getUser(session['username'])
+    if((users is None) or (user is None)):
+        return error()
     for iterUser in users.find():
         if iterUser == user: continue
         score = sum([iterUser[i] == user[i] for i in INTERESTS if i in iterUser and i in user])
@@ -335,19 +371,90 @@ def btnTest():
 	    return render_template('home.html', user=sessionUser)
     return "Null; bad return."
 
+@app.route('/twitterauth')
+def twitterauth():
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
+    url = auth.get_authorization_url()
+    session['request_token'] = auth.request_token
+    return redirect(url)
+	
+@app.route('/callback')
+def twitter_callback():
+    request_token = session['request_token']
+    del session['request_token']
 
-#Code for setting cookies
-@app.route('/setcookie')
-def setcookie():
-    resp = make_response("SETCOOKIE abc, def")
-    resp.set_cookie('abc', 'def')
-    return resp 
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback)
+    auth.request_token = request_token
+    verifier = request.args.get('oauth_verifier')
+    auth.get_access_token(verifier)
+    '''
+    Information to be stored in the database for the user 
+    
+    usersToken = auth.access_token
+    usersSecret = auth.access_token_secret
+    
+    Then you run this
+    
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth.set_access_token(usersToken, usersSecret)
+    api = tweepy.API(auth)
+    
+    user = api.me()
+    
+    #instead of session, twitterUserLink would be stored in the database
+    session['twitterUserLink'] = "https://twitter.com/" + user.screen_name
+    return redirect(url_for('editprofile'))
+    
+    
+    This code should be able to run without redirecting to /twitterapp
+    If not then 
+    '''
+    #should be irrelevant after implementing above code
+    session['token'] = (auth.access_token, auth.access_token_secret)
 
-#Code for getting cookies
-@app.route('/getcookie')
-def getcookie():
-    cookieName = request.cookies.get('abc')
-    return cookieName 
+    return redirect('/twitterapp')
+    
+@app.route('/twitterapp')
+def request_twitter():
+    token, token_secret = session['token']
+    auth = tweepy.OAuthHandler(consumer_key, consumer_secret,callback)
+    auth.set_access_token(token, token_secret)
+    api = tweepy.API(auth)
+    user = api.me()
+    if(user is None):
+        return error()
+    if(user.screen_name is None):
+        return error()
+    
+    updateEntry(session['username'], 'twitterUser', user.screen_name)
+    #instead of session, twitterUserLink would be stored in the database
+    updateEntry(session['username'], 'twitterUserLink', "https://twitter.com/" + user.screen_name)
+    print(user.screen_name)
+    usr = getUser(session['username'])
+    print(usr['twitterUser'])
+    print(usr['twitterUserLink'])
+    #twitterUserName = user.screen_name
+    
+    #twitterFileName = "templates/" + twitterUserName + ".txt"
+    
+    #public_tweets = api.user_timeline()
+    
+    '''
+    myTweetFile = open(twitterFileName,'w+')
+    
+    for i in range(0,10):
+        myTweetFile.write(public_tweets[i].text.encode('utf-8'))
+        myTweetFile.write("\n")
+    
+    myTweetFile.close()
+    '''
+    #session['twitterFirstTweet'] = public_tweets[1].text
+    #session['twitterSecondTweet'] = public_tweets[2].text
+    #for tweet in public_tweets:
+       # allTweets += str(tweet.text)
+    #return render_template('sessionUser.html', singleTweet = singleTweet)
+    return redirect(url_for('editprofile'))
+
 
 #Heroku note: app.secret_key may need to be moved outside of if since heroku doesn't reach this if
 if __name__ == '__main__':
