@@ -224,7 +224,7 @@ def user(siteUser):
         if siteUser == sessionUser:
             return render_template('sessionUser.html', user=user, siteUser=siteUser, posts=posts)
         else:
-            return render_template('user.html', sessionUser=sessionUser, user=user, posts=posts )
+            return render_template('user.html', user=user, posts=posts )
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
