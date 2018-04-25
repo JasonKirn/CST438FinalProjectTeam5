@@ -26,8 +26,16 @@
             <h2> Find Users with Similar Interests</h2>
             <a href="{{ url_for('matches') }}">Find Users</a>
         </div>
-        <div class="form-group">
-            Custom Interest:
+        <div id = "list">
+            <h2> Friend List</h2>
+        </div>
+        <div id = "status">
+            <h2> Statuses</h2>
+            <div class="form-group">
+                <textarea class="form-control" name="statusUpdate" rows="5" cols="50" id="description" placeholder="Whats new?"></textarea>
+                <br>
+                <button type="submit" class="btn btn-primary btn-block">Update</button>
+            </div>
         </div>
         <div id = "events">
             <h2> Events</h2>

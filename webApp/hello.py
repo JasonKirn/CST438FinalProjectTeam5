@@ -3,12 +3,16 @@ import os
 import pprint
 import pymongo
 from flask import Flask, flash, render_template, url_for, request, session, redirect, make_response, send_from_directory
+from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
 import tweepy
 from tweepy import Stream
 from tweepy.streaming import StreamListener
+from key import key
+import requests
+
 
 app = Flask(__name__)
 app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
@@ -23,6 +27,9 @@ APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 app.config['MONGO_DBNAME'] = 'beammeupscotty'
 app.config['MONGO_URI'] = 'mongodb://Jason:password123@ds213229.mlab.com:13229/beammeupscotty'
 app.config['SECRET_KEY'] = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
+
+search_url = "https://maps.googleapis.com/maps/api/place/textsearch/json"
+details_url = "https://maps.googleapis.com/maps/api/place/details/json"
 
 mongo = PyMongo(app)
 
@@ -274,13 +281,6 @@ def testPost():
 #        for userCursor in users.find():
 #            return userCursor['name']
 #        return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
-        
-#Accessed by adding on /add to url.  It will insert a sample user into mlab db
-@app.route('/add')
-def addSiteUser():
-    users = mongo.db.siteUsers
-    users.insert({'name' : 'testUserName'})
-    return 'Added User!'
     
 @app.route('/login', methods=['POST'])
 def login():
@@ -322,6 +322,20 @@ def register():
         return 'Username already exists'
     #request.method is GET
     return render_template('register.html')
+
+@app.route('/updatelocation', methods=['POST'])
+def updatelocation():
+    
+    location = json.loads(request.data)
+    
+    users = mongo.db.siteUsers
+    user = users.find_one({'name' : session['username']})
+    users.update(
+        { 'name': session['username'] },
+        {'$set': {'location': '{{"lat": {}, "lng": {}}}'.format(location['lat'], location['lng']) }
+        })
+        
+    return 'OK'
 
 @app.route('/editprofile', methods=['POST', 'GET'])
 def editprofile():
