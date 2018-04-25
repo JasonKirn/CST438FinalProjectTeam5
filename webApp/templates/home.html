@@ -6,6 +6,8 @@
     </head>
     <body>
         <header> 
+            <a href="{{ url_for('user', siteUser=user.name) }}"><img src="{{
+        url_for('static', filename=user.avatarImage) }}" alt="sign in"></a>
             <h1>Team Me Up Scotty</h1>
         </header>
         <a href="{{ url_for('editprofile') }}">Edit Profile</a>

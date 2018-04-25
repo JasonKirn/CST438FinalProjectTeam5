@@ -41,29 +41,29 @@
                 <div class="form-group">
                     Select a character: <select name="profileCharacter" id="profileCharacter" onChange="swapImage()" onLoad="swapImage()">
                     <option value = "{{url_for('static',filename ='default.png')}}"> Select One </option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/asuna.jpeg"}} value = "{{url_for('static',filename ='asuna.jpeg')}}"> Asuna</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/batman.png"}} value = "{{url_for('static',filename ='batman.png')}}"> Batman</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/blackwidow.png"}} value = "{{url_for('static',filename ='blackwidow.png')}}"> Black Widow</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/cersei.jpg"}} value = "{{url_for('static',filename ='cersei.jpg')}}"> Cersei Lannister</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/daenerys.jpg"}} value = "{{url_for('static',filename ='daenerys.jpg')}}"> Daenerys Targaryen</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/galadriel.png"}} value = "{{url_for('static',filename ='galadriel.png')}}"> Galadriel</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/gandalf.jpg"}} value = "{{url_for('static',filename ='gandalf.jpg')}}"> Gandalf</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/goku.png"}} value = "{{url_for('static',filename ='goku.png')}}"> Goku</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/hermione.jpg"}} value = "{{url_for('static',filename ='hermione.jpg')}}"> Hermione</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/kakashi.jpg"}} value = "{{url_for('static',filename ='kakashi.jpg')}}"> Kakashi</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/kirk.png"}} value = "{{url_for('static',filename ='kirk.png')}}"> Kirk</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/leia.png"}} value = "{{url_for('static',filename ='leia.png')}}"> Leia</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/link.png"}} value = "{{url_for('static',filename ='link.png')}}"> Link</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/luffy.png"}} value = "{{url_for('static',filename ='luffy.png')}}"> Luffy</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/mario.png"}} value = "{{url_for('static',filename ='mario.png')}}"> Mario</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/peach.jpeg"}} value = "{{url_for('static',filename ='peach.jpeg')}}"> Princess Peach</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/spiderman.png"}} value = "{{url_for('static',filename ='spiderman.png')}}"> Spider-Man</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/spock.jpg"}} value = "{{url_for('static',filename ='spock.jpg')}}"> Spock</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/tracer.jpg"}} value = "{{url_for('static',filename ='tracer.jpg')}}"> Tracer</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/vader.jpeg"}} value = "{{url_for('static',filename ='vader.jpeg')}}"> Vader</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/wonder_woman.png"}} value = "{{url_for('static',filename ='wonder_woman.png')}}"> Wonder Woman</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/yoda.png"}} value = "{{url_for('static',filename ='yoda.png')}}"> Yoda</option>
-                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "/static/zelda.png"}} value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "asuna.jpeg"}} value = "{{url_for('static',filename ='asuna.jpeg')}}"> Asuna</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "batman.png"}} value = "{{url_for('static',filename ='batman.png')}}"> Batman</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "blackwidow.png"}} value = "{{url_for('static',filename ='blackwidow.png')}}"> Black Widow</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "cersei.jpg"}} value = "{{url_for('static',filename ='cersei.jpg')}}"> Cersei Lannister</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "daenerys.jpg"}} value = "{{url_for('static',filename ='daenerys.jpg')}}"> Daenerys Targaryen</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "galadriel.png"}} value = "{{url_for('static',filename ='galadriel.png')}}"> Galadriel</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "gandalf.jpg"}} value = "{{url_for('static',filename ='gandalf.jpg')}}"> Gandalf</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "goku.png"}} value = "{{url_for('static',filename ='goku.png')}}"> Goku</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "hermione.jpg"}} value = "{{url_for('static',filename ='hermione.jpg')}}"> Hermione</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "kakashi.jpg"}} value = "{{url_for('static',filename ='kakashi.jpg')}}"> Kakashi</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "kirk.png"}} value = "{{url_for('static',filename ='kirk.png')}}"> Kirk</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "leia.png"}} value = "{{url_for('static',filename ='leia.png')}}"> Leia</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "link.png"}} value = "{{url_for('static',filename ='link.png')}}"> Link</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "luffy.png"}} value = "{{url_for('static',filename ='luffy.png')}}"> Luffy</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "mario.png"}} value = "{{url_for('static',filename ='mario.png')}}"> Mario</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "peach.jpeg"}} value = "{{url_for('static',filename ='peach.jpeg')}}"> Princess Peach</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "spiderman.png"}} value = "{{url_for('static',filename ='spiderman.png')}}"> Spider-Man</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "spock.jpg"}} value = "{{url_for('static',filename ='spock.jpg')}}"> Spock</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "tracer.jpg"}} value = "{{url_for('static',filename ='tracer.jpg')}}"> Tracer</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "vader.jpeg"}} value = "{{url_for('static',filename ='vader.jpeg')}}"> Vader</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "wonder_woman.png"}} value = "{{url_for('static',filename ='wonder_woman.png')}}"> Wonder Woman</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "yoda.png"}} value = "{{url_for('static',filename ='yoda.png')}}"> Yoda</option>
+                    <option {{'selected="selected"' if sessionUser['avatarImage'] == "zelda.png"}} value = "{{url_for('static',filename ='zelda.png')}}"> Zelda</option>
                 </select> <br/>
                 </div>
 

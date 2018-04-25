@@ -352,7 +352,11 @@ def editprofile():
         for i in range(1,19):
             setInterest(userName, i, request.form.get('interest'+str(i)))
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
-        updateEntry(userName, 'avatarImage', request.form.get('profileCharacter'))
+        
+        avatarString = request.form.get('profileCharacter')
+        splicedAvatarString = avatarString[8:]
+        
+        updateEntry(userName, 'avatarImage', splicedAvatarString)
         return render_template('home.html', user=sessionUser)
         #return redirect(url_for('home')
         #4/21 FIX
