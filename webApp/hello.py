@@ -406,28 +406,7 @@ def twitter_callback():
     auth.request_token = request_token
     verifier = request.args.get('oauth_verifier')
     auth.get_access_token(verifier)
-    '''
-    Information to be stored in the database for the user 
-    
-    usersToken = auth.access_token
-    usersSecret = auth.access_token_secret
-    
-    Then you run this
-    
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.set_access_token(usersToken, usersSecret)
-    api = tweepy.API(auth)
-    
-    user = api.me()
-    
-    #instead of session, twitterUserLink would be stored in the database
-    session['twitterUserLink'] = "https://twitter.com/" + user.screen_name
-    return redirect(url_for('editprofile'))
-    
-    
-    This code should be able to run without redirecting to /twitterapp
-    If not then 
-    '''
+
     #should be irrelevant after implementing above code
     session['token'] = (auth.access_token, auth.access_token_secret)
 
@@ -446,32 +425,10 @@ def request_twitter():
         return error()
     
     updateEntry(session['username'], 'twitterUser', user.screen_name)
-    #instead of session, twitterUserLink would be stored in the database
+
     updateEntry(session['username'], 'twitterUserLink', "https://twitter.com/" + user.screen_name)
-    print(user.screen_name)
     usr = getUser(session['username'])
-    print(usr['twitterUser'])
-    print(usr['twitterUserLink'])
-    #twitterUserName = user.screen_name
-    
-    #twitterFileName = "templates/" + twitterUserName + ".txt"
-    
-    #public_tweets = api.user_timeline()
-    
-    '''
-    myTweetFile = open(twitterFileName,'w+')
-    
-    for i in range(0,10):
-        myTweetFile.write(public_tweets[i].text.encode('utf-8'))
-        myTweetFile.write("\n")
-    
-    myTweetFile.close()
-    '''
-    #session['twitterFirstTweet'] = public_tweets[1].text
-    #session['twitterSecondTweet'] = public_tweets[2].text
-    #for tweet in public_tweets:
-       # allTweets += str(tweet.text)
-    #return render_template('sessionUser.html', singleTweet = singleTweet)
+
     return redirect(url_for('editprofile'))
 
 
