@@ -20,7 +20,8 @@ app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
 consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
 #NOTE: WILL PROBABLY NEED TO CHANGE WHEN DEPLOYED TO A HEROKU LINK
-callback = 'http://cst438finalproject-jasonkirn.c9users.io:8080/callback'
+#callback = 'http://cst438finalproject-jasonkirn.c9users.io:8080/callback'
+callback = 'https://https://cst438finalprojectteam5.herokuapp.com/callback'
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
