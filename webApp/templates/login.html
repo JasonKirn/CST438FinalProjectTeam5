@@ -1,11 +1,12 @@
-{% extends "layout.html" %} {% block body %}
 <!DOCTYPE html>
-<html>
+<html>{% extends "layout.html" %} {% block body %}
     
 <head>
+    <meta charset="utf-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <title>Login</title>
+   
     <style>
         body, html{
             height: 100%;
@@ -29,13 +30,22 @@
             text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
         }
         #about{
+           padding-right: 15px;
+            padding-left: 15px;
             margin: 0;
             position: absolute;
             top: 50%;
             left: 30%;
             transform: translate(-50%, -50%);
-            text-align: center;
-            font-size: 18;
+        }
+        .container-fluid{
+            padding-right: 15px;
+            padding-left: 15px;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -50%);
         }
     </style>
 </head>
@@ -48,28 +58,33 @@
             with others that share similar insterests.
         </div>
     </div>
-    <div id="login">
-    <div class="container">
+    <div class="container-fluid">
         <div class="row">
-            <div class="col-md-4 col-md-offset-4">
+            <div class="col-md-12 col-md-offset-4">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="textcol">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
                 <form method=POST action="{{ url_for('login') }}">
                     <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
+                        <label for="exampleInputEmail1" id="textcol">Username</label>
                         <input type="text" class="form-control" name="username" placeholder="Username">
                     </div>
                     <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
+                        <label for="exampleInputPassword1" id="textcol">Password</label>
                         <input type="password" class="form-control" name="pass" placeholder="Password">
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Log In</button>
                 </form>
                 <br>
-                <div>
+                <div id="textcol">
                     Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </body>
 </html>

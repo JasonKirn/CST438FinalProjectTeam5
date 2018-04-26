@@ -1,26 +1,9 @@
 {% include "dashboard.html" %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <title>{{user.name}}</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
-  <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+<html>
 
-<!-  CSS_FIXUP  Not sure if map block is necessary?  ->
-<style>    
-    @import url(../static/css/bootstrap.min.css);
-    /* Set black background color, white text and some padding */
-    footer {
-      background-color: #555;
-      color: white;
-      padding: 15px;
-    }
-    
-    #map {
+<head>
+    <style>
+        #map {
             height: 350px;
             width: 350px;
         }
@@ -30,50 +13,26 @@
             margin: 0;
             padding: 0;
         }
-  </style>
-</head>
-<body>
-    
-<!- CSS_FIXUP Not sure if necessary ->
-<style>
-.col-sm-7 {
-    -ms-flex: 0 0 58.333333%;
-    flex: 0 0 58.333333%;
-    max-width: 38.333333%;
-}
-body{
-    height: 100%;
-    width: 100%;
-}
-.card-body{
-    position: relative;
-    margin-right: 41px;
-}
     </style>
-    
-<!- END ->
-<div class="container-fluid">
-<div class="container text-center" style="width: 1400; max-width: 1400;"> 
-  <div class="row">
-    <div class="col-sm-2 well" style="width: 400; max-width: 400;">
-      <div class="well">
-        <p><a href="#">{{ user.name }}</a></p>
-        <img src="{{url_for('static', filename=user.avatarImage)}}" class="img-circle" height="120" width="120" alt="Avatar">
-      </div>
-      <p><a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a></p>
-      {% if user.profileDescription != "" %}
-      <div class="well">
-        <p>{{user.profileDescription}}</p>
-      </div>
-      {% endif %}
-      {% if user.profileStatus != "" %}
-      <div class="well">
-        <h4>Current Status:</h4>
-        {{user.profileStatus}}
-      </div>
-      {% endif %}
-      
-      <p>{% if user.lat is not none and user.lng is not none %}
+     <meta name="viewport" content="width=device-width, initial-scale=1">
+     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+    <h1>User: {{ user.name }}</h1>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a>
+    {% if user.lat is not none and user.lng is not none %}
     <div id="map"></div>
     <script>
         var map, infoWindow;
@@ -89,11 +48,17 @@ body{
     </script>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBwSBN9WKWNW7zdGPXgalQkmTUZ_KssX7g&libraries=places&callback=initMap"
          async defer></script>
-    {% endif %}</p>
-    </div>
-    <div class="col-sm-7"style="width: 620; max-width: 620;">
-      <div>
-      <div id="accordion">
+    {% endif %}
+    <div>{{ user.profileDescription }}</div>
+    <hr> {% for post in posts %}
+    <p>
+        {{ user.name }} says: <b>{{ post.body }}</b>
+    </p>
+        {% if twitterUserLink != None %}
+            <a class="twitter-timeline" href={{twitterUserLink}} data-height = "500" data-width = "500">Tweets by {{twitterUser}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        {% endif %}
+    <div>
+        <div id="accordion">
             <div class="card">
                 <div class="card-header" id="headingOne">
                     <h5 class="mb-0">
@@ -103,7 +68,7 @@ body{
                     </h5>
                 </div>
 
-                <div id="collapseOne" class="collapse" aria-labelledby="headingOne" data-parent="#accordion">
+                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
                     <div class="card-body">
                         {% if user.interest1 != None %}
                         <ul>{{user.interest1}}</ul>
@@ -190,18 +155,9 @@ body{
             </div>
         </div>
     </div>
-    </div>
-    <div class="col-sm-3 well"  style="width: 700; max-width: 700; margin-left: 0 auto">
-     {% if twitterUserLink != None %}
-          <a class="twitter-timeline" href={{twitterUserLink}} data-height = "500" data-width = "450">Tweets by {{twitterUser}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      {% endif %}
-    </div>
-  </div>
-</div>
-</div>
-<footer class="container-fluid text-center">
-  <p>Team Me Up Scotty</p>
-</footer>
+
 
 </body>
+
 </html>
+{% endfor %}

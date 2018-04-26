@@ -1,7 +1,8 @@
 <html>
+<div class="container-fluid">
+<div class="container text-left" style="width: 1400; max-width: 1400;"> 
 
 <head>
-    <meta charset- "utf-8"/>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
     <meta charset="utf-8">
     <style>
@@ -27,7 +28,12 @@
 
 <body>
     {% block body %}
-      <h2>Sign in with twitter</h2>
+      <h1>Optional:</h1>
+      <h2>This website will ask for your location.</h2>
+      <h2>Only provide it if you wish to show others your location on your profile.</h2>
+      <h1>Optional:</h1>
+      <h2>Click the Twitter icon to sign in with twitter.</h2>
+      <h2>Doing this will post your tweets on your profile page for others to see.</h2>
                 
                   
         <p>
@@ -35,6 +41,14 @@
         url_for('static', filename='Twitter.png') }}" alt="sign in"></a>
              
     {% endblock %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div>{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    <h1>Recommended:</h1>
     <form method=POST action="{{ url_for('editprofile') }}">
         <fieldset>
             <legend>Edit Your Profile</legend>
@@ -235,4 +249,6 @@
     </script>
 </body>
 
+</div>
+</div>
 </html>

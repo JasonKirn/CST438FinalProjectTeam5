@@ -220,11 +220,16 @@ def home():
     friend2 = getUser(user["friend2"])
     friend3 = getUser(user["friend3"])
     friend4 = getUser(user["friend4"])
-    print(friend2)
+    friend5 = getUser(user["friend5"])
+    friend6 = getUser(user["friend6"])
+    friend7 = getUser(user["friend7"])
+    friend8 = getUser(user["friend8"])
+    friend9 = getUser(user["friend9"])
+    friend10 = getUser(user["friend10"])
     if(user is None):
         return render_template('login.html')
     else:
-        return render_template('home.html', user=user,friend1 = friend1,friend2 = friend2, friend3 = friend3,friend4 = friend4)
+        return render_template('home.html', user=user,friend1 = friend1,friend2 = friend2, friend3 = friend3,friend4 = friend4, friend5 = friend5, friend6 = friend6, friend7 = friend7, friend8 = friend8, friend9 = friend9, friend10 = friend10)
 
 @app.route('/logout')
 def logout():
@@ -284,7 +289,7 @@ def testPost():
 #        for userCursor in users.find():
 #            return userCursor['name']
 #        return "Hello " + session['username'] + " here is your profile description.  If it loads here correctly, that means it was an asynchronous call: " + "\n" + user['profileDescription']
-    
+
 @app.route('/login', methods=['POST'])
 def login():
     loginUser = getUser(request.form['username'])
@@ -297,15 +302,26 @@ def login():
         if isSamePassword:
             session['username'] = request.form['username']
             return redirect(url_for('home'))
-        
-    return 'username or password incorrect'
     
+    #redirects to login page again with flashed message
+    flash('Username or password incorrect')
+    return redirect(url_for('hello'))
+    
+def hasNumbers(inputString):
+    return any(char.isdigit() for char in inputString)
+
 #methods makes sure it accepts POST and GET request methods
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
         existingUser = getUser(request.form['username'])
         if existingUser is None:
+            if (len(request.form['pass'].encode('utf-8')) < 5):
+                flash('Password is too short!')
+                return redirect(url_for('register'))
+            if (hasNumbers(request.form['pass'].encode('utf-8')) == False):
+                flash('Password requires a number')
+                return redirect(url_for('register'))
             hashpass = bcrypt.hashpw(request.form['pass'].encode('utf-8'), bcrypt.gensalt())
             newUser(request.form['username'], hashpass)
             #create session for newly registered user
@@ -427,6 +443,7 @@ def request_twitter():
     updateEntry(session['username'], 'twitterUserLink', "https://twitter.com/" + user.screen_name)
     usr = getUser(session['username'])
 
+    flash("Successfully logged in with Twitter!")
     return redirect(url_for('editprofile'))
 
 

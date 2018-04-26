@@ -118,168 +118,319 @@
        </div>
     </div>
     <div class="col-sm-7">
-    
       <div class="row">
         <div class="col-sm-12">
-          <div class="panel panel-default text-left">
+          <div class="panel panel-default text-center">
             <div class="panel-body">
               <form action="/updateStatus" method="post">
-                <p><input type="text" name="statusTextField" id="statusTextField"></input></p>
-                <p><input type="submit" class="btn btn-primary" value="Update Status" name="statusTextPost" ></button></p>
+                <p><input type="text" name="statusTextField" id="statusTextField"></input>
+                <input type="submit" class="btn btn-primary" value="Update Status" name="statusTextPost" ></button></p>
               </form>     
             </div>
           </div>
         </div>
       </div>
       <h2>Friend Statuses</h2>
-      {% if friend1 != None  %}
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></p>
-            {% if friend1 != None %}
-            <img src="{{url_for('static', filename=friend1.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-            {% if friend1 == None  %}
-            <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
+      <div id="" style="overflow:auto; height:500px;">
+        {% if friend1 != None  %}
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></p>
+              {% if friend1 != None %}
+              <img src="{{url_for('static', filename=friend1.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend1 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend1.profileStatus != "" %}
+              <p>{{friend1.profileStatus}}</p>
+              {% endif %}
+              {% if friend1.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+              {% if friend1 == None %}
+              <p>Looks like you need to get more friends, check your matches!</p>
+              {% endif %}
+            </div>
           </div>
         </div>
-        <div class="col-sm-9">
-          <div class="well">
-            {% if friend1.profileStatus != "" %}
-            <p>{{friend1.profileStatus}}</p>
-            {% endif %}
-            {% if friend1.profileStatus == "" %}
-            <p>Looks like your friend hasn't posted yet</p>
-            {% endif %}
-            {% if friend1 == None %}
-            <p>Looks like you need to get more friends, check your matches!</p>
-            {% endif %}
+        {% endif %}
+        {% if friend1 == None  %}
+          <p>Looks like you need to get more friends, check your matches!</p>
+        {% endif %}
+        {% if friend2 != None  %}
+        <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend2 }}">{{friend2.name}}</a></p>
+              {% if friend2 != None %}
+              <img src="{{url_for('static', filename=friend2.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend2 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend2.profileStatus != "" %}
+              <p>{{friend2.profileStatus}}</p>
+              {% endif %}
+              {% if friend2.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+              {% if friend2 == None %}
+              <p>Looks like you need to get more friends, check your matches!</p>
+              {% endif %}
+            </div>
           </div>
         </div>
+        {% endif %}
+        {% if friend3 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend3 }}">{{friend3.name}}</a></p>
+              {% if friend3 != None %}
+              <img src="{{url_for('static', filename=friend3.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend3 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend3.profileStatus != "" %}
+              <p>{{friend3.profileStatus}}</p>
+              {% endif %}
+              {% if friend3.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+              {% if friend3 == None %}
+              <p>Looks like you need to get more friends, check your matches!</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if friend4 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend4 }}">{{friend4.name}}</a></p>
+              {% if friend4 != None %}
+              <img src="{{url_for('static', filename=friend4.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend4 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend4.profileStatus != "" %}
+              <p>{{friend4.profileStatus}}</p>
+              {% endif %}
+              {% if friend4.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+              {% if friend4 == None %}
+              <p>Looks like you need to get more friends, check your matches!</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if friend5 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend5 }}">{{friend5.name}}</a></p>
+              {% if friend5 != None %}
+              <img src="{{url_for('static', filename=friend5.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend5 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend5.profileStatus != "" %}
+              <p>{{friend5.profileStatus}}</p>
+              {% endif %}
+              {% if friend5.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if friend6 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend6 }}">{{friend6.name}}</a></p>
+              {% if friend6 != None %}
+              <img src="{{url_for('static', filename=friend6.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend6 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend6.profileStatus != "" %}
+              <p>{{friend6.profileStatus}}</p>
+              {% endif %}
+              {% if friend6.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+         {% if friend7 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend7 }}">{{friend7.name}}</a></p>
+              {% if friend7 != None %}
+              <img src="{{url_for('static', filename=friend7.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend7 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend7.profileStatus != "" %}
+              <p>{{friend7.profileStatus}}</p>
+              {% endif %}
+              {% if friend7.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+         {% if friend8 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend8 }}">{{friend8.name}}</a></p>
+              {% if friend8 != None %}
+              <img src="{{url_for('static', filename=friend8.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend8 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend8.profileStatus != "" %}
+              <p>{{friend8.profileStatus}}</p>
+              {% endif %}
+              {% if friend8.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if friend9 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend9 }}">{{friend9.name}}</a></p>
+              {% if friend9 != None %}
+              <img src="{{url_for('static', filename=friend9.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend9 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend9.profileStatus != "" %}
+              <p>{{friend9.profileStatus}}</p>
+              {% endif %}
+              {% if friend9.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+        {% if friend10 != None  %}
+         <div class="row">
+          <div class="col-sm-3">
+            <div class="well">
+             <p><a href="/users/{{ user.friend10 }}">{{friend10.name}}</a></p>
+              {% if friend10 != None %}
+              <img src="{{url_for('static', filename=friend10.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+              {% if friend10 == None  %}
+              <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
+              {% endif %}
+            </div>
+          </div>
+          <div class="col-sm-9">
+            <div class="well">
+              {% if friend10.profileStatus != "" %}
+              <p>{{friend10.profileStatus}}</p>
+              {% endif %}
+              {% if friend10.profileStatus == "" %}
+              <p>Looks like your friend hasn't posted yet</p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
       </div>
-      {% endif %}
-      {% if friend1 == None  %}
-        <p>Looks like you need to get more friends, check your matches!</p>
-      {% endif %}
-      {% if friend2 != None  %}
-      <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p><a href="/users/{{ user.friend2 }}">{{friend2.name}}</a></p>
-            {% if friend2 != None %}
-            <img src="{{url_for('static', filename=friend2.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-            {% if friend2 == None  %}
-            <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            {% if friend2.profileStatus != "" %}
-            <p>{{friend2.profileStatus}}</p>
-            {% endif %}
-            {% if friend2.profileStatus == "" %}
-            <p>Looks like your friend hasn't posted yet</p>
-            {% endif %}
-            {% if friend2 == None %}
-            <p>Looks like you need to get more friends, check your matches!</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      {% if friend3 != None  %}
-       <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p><a href="/users/{{ user.friend2 }}">{{friend3.name}}</a></p>
-            {% if friend3 != None %}
-            <img src="{{url_for('static', filename=friend3.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-            {% if friend3 == None  %}
-            <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            {% if friend3.profileStatus != "" %}
-            <p>{{friend3.profileStatus}}</p>
-            {% endif %}
-            {% if friend3.profileStatus == "" %}
-            <p>Looks like your friend hasn't posted yet</p>
-            {% endif %}
-            {% if friend3 == None %}
-            <p>Looks like you need to get more friends, check your matches!</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endif %}
-      {% if friend4 != None  %}
-       <div class="row">
-        <div class="col-sm-3">
-          <div class="well">
-           <p><a href="/users/{{ user.friend2 }}">{{friend4.name}}</a></p>
-            {% if friend4 != None %}
-            <img src="{{url_for('static', filename=friend4.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-            {% if friend4 == None  %}
-            <img src="{{url_for('static',filename ='default.png')}}" class="img-circle" height="55" width="55" alt="Avatar">
-            {% endif %}
-          </div>
-        </div>
-        <div class="col-sm-9">
-          <div class="well">
-            {% if friend4.profileStatus != "" %}
-            <p>{{friend4.profileStatus}}</p>
-            {% endif %}
-            {% if friend4.profileStatus == "" %}
-            <p>Looks like your friend hasn't posted yet</p>
-            {% endif %}
-            {% if friend4 == None %}
-            <p>Looks like you need to get more friends, check your matches!</p>
-            {% endif %}
-          </div>
-        </div>
-      </div>
-      {% endif %}
     </div>
     <div class="col-sm-2 well">
       <h2>Friends List: </h2>
         <h3>
         {% if user.friend1 != "" %}
-           <p><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></p>
+           <p><img src="{{url_for('static', filename=friend1.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></p>
         {% endif %}
         {% if user.friend2 != "" %}
-            <p><a href="/users/{{ user.friend2 }}">{{user.friend2}}</a></p>
+            <p><img src="{{url_for('static', filename=friend2.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend2 }}">{{user.friend2}}</a></p>
         {% endif %}
         {% if user.friend3 != "" %}
-            <p><a href="/users/{{ user.friend3 }}">{{user.friend3}}</a></p>
+            <p><img src="{{url_for('static', filename=friend3.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend3 }}">{{user.friend3}}</a></p>
         {% endif %}
         {% if user.friend4 != "" %}
-            <p><a href="/users/{{ user.friend4 }}">{{user.friend4}}</a></p>
+            <p><img src="{{url_for('static', filename=friend4.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend4 }}">{{user.friend4}}</a></p>
         {% endif %}
         {% if user.friend5 != "" %}
-            <p><a href="/users/{{ user.friend5 }}">{{user.friend5}}</a></p>
+            <p><img src="{{url_for('static', filename=friend5.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend5 }}">{{user.friend5}}</a></p>
         {% endif %}
         {% if user.friend6 != "" %}
-            <p><a href="/users/{{ user.friend6 }}">{{user.friend6}}</a></p>
+            <p><img src="{{url_for('static', filename=friend6.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend6 }}">{{user.friend6}}</a></p>
         {% endif %}
         {% if user.friend7 != "" %}
-            <p><a href="/users/{{ user.friend7 }}">{{user.friend7}}</a></p>
+            <p><img src="{{url_for('static', filename=friend7.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend7 }}">{{user.friend7}}</a></p>
         {% endif %}
         {% if user.friend8 != "" %}
-            <p><a href="/users/{{ user.friend8 }}">{{user.friend8}}</a></p>
+            <p><img src="{{url_for('static', filename=friend8.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend8 }}">{{user.friend8}}</a></p>
         {% endif %}
         {% if user.friend9 != "" %}
-            <p><a href="/users/{{ user.friend9 }}">{{user.friend9}}</a></p>
+            <p><img src="{{url_for('static', filename=friend9.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend9 }}">{{user.friend9}}</a></p>
         {% endif %}
         {% if user.friend10 != "" %}
-            <p><a href="/users/{{ user.friend10 }}">{{user.friend10}}</a></p>
+            <p><img src="{{url_for('static', filename=friend10.avatarImage)}}" class="img-circle" height="25" width="25" alt="Avatar"><a href="/users/{{ user.friend10 }}">{{user.friend10}}</a></p>
         {% endif %}
         </h3>
   </div>
