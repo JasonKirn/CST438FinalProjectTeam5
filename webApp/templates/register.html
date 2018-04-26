@@ -1,29 +1,109 @@
-{% extends "layout.html" %}
-{% block body %}
+<!DOCTYPE html>
+<html>{% extends "layout.html" %} {% block body %}
 
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            {% with messages = get_flashed_messages() %}
-                {% if messages %}
-                    {% for message in messages %}
+<head>
+    <title></title>
+    <style>
+        body,
+        html {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: #36454f;
+        }
+
+        #login {
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+        }
+
+        .container-fluid {
+            padding-right: 15px;
+            padding-left: 15px;
+            margin: 0;
+            top: 50%;
+            left: 60%;
+            transform: translate(-50%, -50%);
+        }
+
+        body {
+            margin: 0px;
+            overflow-x: hidden;
+        }
+
+        .bgscroller img:nth-of-type(1) {
+            position: absolute;
+            width: 20vw;
+
+            position: relative;
+            top: 50%;
+            -webkit-transform: translateY(-50%);
+            -moz-transform: translateY(-50%);
+            -o-transform: translateY(-50%);
+            transform: translateY(-50%);
+        }
+
+        .bgscroller {
+            width: 100vw;
+            height: 100vh;
+            text-align: center;
+            background: url(static/bgScroll.jpg) repeat;
+            -webkit-animation: backgroundScroll 1999999s linear infinite;
+            animation: backgroundScroll 1999999s linear infinite;
+            /* Adjust timing here according to speed required */
+            position: fixed;
+        }
+
+        @-webkit-keyframes backgroundScroll {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -99999999px 0;
+            }
+        }
+
+        @keyframes backgroundScroll {
+            from {
+                background-position: 0 0;
+            }
+            to {
+                background-position: -99999999px 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bgscroller">
+        <div id="login">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-12">
+                        {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
                         <div>{{ message }}</div>
-                    {% endfor %}
-                {% endif %}
-            {% endwith %}
-            <form method=POST action="{{ url_for('register') }}">
-                <div class="form-group">
-                    <label for="exampleInputUsername">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Username">
+                        {% endfor %} {% endif %} {% endwith %}
+                        <form method=POST action="{{ url_for('register') }}">
+                            <div class="form-group">
+                                <label for="exampleInputUsername">Username</label>
+                                <input type="text" class="form-control" name="username" placeholder="Username">
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputPassword">Password</label>
+                                <input type="password" class="form-control" name="pass" placeholder="Password">
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-block">Register</button>
+                        </form>
+                        <br>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword">Password</label>
-                    <input type="password" class="form-control" name="pass" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Register</button>
-            </form>
-            <br>
+            </div>
         </div>
     </div>
-</div>
+</body>
+
+</html>
 {% endblock %}
