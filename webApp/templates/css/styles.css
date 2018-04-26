@@ -1,3 +1,4 @@
+
 header
 {
     text-align:center;
@@ -6,6 +7,11 @@ img
 {
     max-width: 50%;
     height:auto;
+}
+#statusTextField
+{
+    height:200px;
+    width:200px;
 }
 #profile
 {

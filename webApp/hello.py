@@ -3,7 +3,7 @@ import os
 import pprint
 import pymongo
 from flask import Flask, flash, render_template, url_for, request, session, redirect, make_response, send_from_directory
-from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify
+from flask import Flask, render_template, url_for, request, session, redirect, make_response, send_from_directory, jsonify, json
 from pymongo import MongoClient
 from flask_pymongo import PyMongo
 import bcrypt
@@ -20,8 +20,8 @@ app.secret_key = '6ab7d1f456ee6d2630c670b1a025ed2fbd86fdfb31d89a7d'
 consumer_key = 'oQrr2yblVu55dnV1svNPvqU1m'
 consumer_secret = 'ChVz3zgUWm5TGtHALl0LjPrCbI9Cxq6w3hrZTFReFyhnfZOuwx'
 #NOTE: WILL PROBABLY NEED TO CHANGE WHEN DEPLOYED TO A HEROKU LINK
-#callback = 'http://cst438finalproject-jasonkirn.c9users.io:8080/callback'
-callback = 'https://cst438finalprojectteam5.herokuapp.com/callback'
+callback = 'https://cst438finalproject-jasonkirn.c9users.io:8080/callback'
+#callback = 'https://cst438finalprojectteam5.herokuapp.com/callback'
 
 APP_ROOT = os.path.dirname(os.path.abspath(__file__))
 
@@ -106,7 +106,7 @@ def acceptrequest(notification):
     for x in range(1, 11):
         friendString = 'friend' + str(x)
         
-        if user[friendString] == '':
+        if otherUser[friendString] == '':
             otherUserFullFriendList = False
             otherUserFriendSlot = friendString
             break
@@ -123,7 +123,7 @@ def acceptrequest(notification):
     for y in range(1, 11):
         friendString = 'friend' + str(y)
         
-        if otherUser[friendString] == '':
+        if user[friendString] == '':
             userFullFriendList = False
             userFriendSlot = friendString
             break
@@ -215,10 +215,16 @@ def addfriend(userToAdd):
 @app.route('/home')
 def home():
     user = getUser(session['username'])
+    #friend1 = getUser('guy3')
+    friend1 = getUser(user["friend1"])
+    friend2 = getUser(user["friend2"])
+    friend3 = getUser(user["friend3"])
+    friend4 = getUser(user["friend4"])
+    print(friend2)
     if(user is None):
         return render_template('login.html')
     else:
-        return render_template('home.html', user=user)
+        return render_template('home.html', user=user,friend1 = friend1,friend2 = friend2, friend3 = friend3,friend4 = friend4)
 
 @app.route('/logout')
 def logout():
@@ -239,8 +245,6 @@ def user(siteUser):
     
     sessionUserName = session['username']
     selectedUser = getUser(siteUser)
-    print(selectedUser)
-    print(siteUser)
     if((selectedUser is not None)):
         if('twitterUser' not in selectedUser):
             twitterUser = None
@@ -258,8 +262,6 @@ def user(siteUser):
         posts = [
             {'author' : siteUser, 'body': 'Test post #1'}    
         ]
-        print(twitterUser)
-        print(twitterUserLink)
         if siteUser == sessionUserName:
             return render_template('sessionUser.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
@@ -310,14 +312,9 @@ def register():
             session['username'] = request.form['username']
             userName = session['username']
             updateEntry(userName, 'profileStatus', '')
-            setFriend(userName,1,'dog')
-            setFriend(userName,2,'fish')
-            setFriend(userName,3,'duck')
-            for i in range(4,11):
+            for i in range(1,11):
                 setFriend(userName,i,'')
-            setNotification(userName,1,'I am notification 1')
-            setNotification(userName,2,'I am notification 2')
-            for i in range(3,11):
+            for i in range(1,11):
                 setNotification(userName,i,'')
             return redirect(url_for('editprofile'))
         return 'Username already exists'
@@ -357,9 +354,7 @@ def editprofile():
         splicedAvatarString = avatarString[8:]
         
         updateEntry(userName, 'avatarImage', splicedAvatarString)
-        return render_template('home.html', user=sessionUser)
-        #return redirect(url_for('home')
-        #4/21 FIX
+        return redirect(url_for('home'))
     #request.method is GET
     return render_template('editProfile.html', sessionUser=sessionUser)
 
@@ -386,8 +381,11 @@ def btnTest():
 	    sessionUser = getUser(session['username'])
 	    if 'username' in session:
 		    myStatus = request.form['statusTextField']
-		    updateEntry(sessionUser, 'profileStatus', request.form.get('statusTextField'))
-	    return render_template('home.html', user=sessionUser)
+		    print(sessionUser)
+		    print(myStatus)
+            updateEntry(session['username'], 'profileStatus', myStatus)
+            print(sessionUser)
+	    return redirect(url_for('home'))
     return "Null; bad return."
 
 @app.route('/twitterauth')

@@ -1,24 +1,76 @@
-{% extends "layout.html" %}
-{% block body %}
-<div class="container">
-    <div class="row">
-        <div class="col-md-4 col-md-offset-4">
-            <form method=POST action="{{ url_for('login') }}">
-                <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="text" class="form-control" name="username" placeholder="Username">
+{% extends "layout.html" %} {% block body %}
+<!DOCTYPE html>
+<html>
+    
+<head>
+    
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body, html{
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            background: #36454f;
+        }
+        #login{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+        }
+        #textcol{
+            position:relative;
+            opacity: 1;
+            color: white;
+            z-index: 1;
+            text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+        }
+        #about{
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 30%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            font-size: 18;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="about">
+        <div id="textcol">
+            <h2>Welcome to Team Me Up Scotty!</h2></br>
+            The web app designed to connect you </br>
+            with others that share similar insterests.
+        </div>
+    </div>
+    <div id="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <form method=POST action="{{ url_for('login') }}">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Username">
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">Password</label>
+                        <input type="password" class="form-control" name="pass" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                </form>
+                <br>
+                <div>
+                    Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
                 </div>
-                <div class="form-group">
-                    <label for="exampleInputPassword1">Password</label>
-                    <input type="password" class="form-control" name="pass" placeholder="Password">
-                </div>
-                <button type="submit" class="btn btn-primary btn-block">Log In</button>
-            </form>
-            <br>
-            <div>
-                Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
             </div>
         </div>
     </div>
-</div>
+    </div>
+</body>
+</html>
 {% endblock %}
