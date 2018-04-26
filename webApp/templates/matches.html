@@ -9,10 +9,10 @@
 </head>
 <body>
     <h1>Hi {{ user.name }}!</h1>
-    <h2>These are the {{ matched_users|count }} people you have the most in common with.</h2>
+    <h2>These are the top {{ matched_users|count }} people you have the most in common with.</h2>
     <ul>
         {% for user in matched_users %}
-        <li><a href="/users/{{ user['name'] }}">{{ user.name }}</a></li>
+        <p><img src="{{url_for('static', filename=user.avatarImage)}}" class="img-circle" height="120" width="120" alt="Avatar"><a href="/users/{{ user['name'] }}">{{ user.name }}</a></p>
         {% endfor %}
     </ul>
 </body>

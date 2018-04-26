@@ -11,34 +11,34 @@
     <h1>Friends:</h1>
         <ul>
             {% if user.friend1 != "" %}
-                <li><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></li>
+                <li><img src="{{url_for('static', filename=friend1.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend1 }}">{{user.friend1}}</a></li>
             {% endif %}
             {% if user.friend2 != "" %}
-                <li><a href="/users/{{ user.friend2 }}">{{user.friend2}}</a></li>
+                <li><img src="{{url_for('static', filename=friend2.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend2 }}">{{user.friend2}}</a></li>
             {% endif %}
             {% if user.friend3 != "" %}
-                <li><a href="/users/{{ user.friend3 }}">{{user.friend3}}</a></li>
+                <li><img src="{{url_for('static', filename=friend3.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend3 }}">{{user.friend3}}</a></li>
             {% endif %}
             {% if user.friend4 != "" %}
-                <li><a href="/users/{{ user.friend4 }}">{{user.friend4}}</a></li>
+                <li><img src="{{url_for('static', filename=friend4.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend4 }}">{{user.friend4}}</a></li>
             {% endif %}
             {% if user.friend5 != "" %}
-                <li><a href="/users/{{ user.friend5 }}">{{user.friend5}}</a></li>
+                <li><img src="{{url_for('static', filename=friend5.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend5 }}">{{user.friend5}}</a></li>
             {% endif %}
             {% if user.friend6 != "" %}
-                <li><a href="/users/{{ user.friend6 }}">{{user.friend6}}</a></li>
+                <li><img src="{{url_for('static', filename=friend6.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend6 }}">{{user.friend6}}</a></li>
             {% endif %}
             {% if user.friend7 != "" %}
-                <li><a href="/users/{{ user.friend7 }}">{{user.friend7}}</a></li>
+                <li><img src="{{url_for('static', filename=friend7.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend7 }}">{{user.friend7}}</a></li>
             {% endif %}
             {% if user.friend8 != "" %}
-                <li><a href="/users/{{ user.friend8 }}">{{user.friend8}}</a></li>
+                <li><img src="{{url_for('static', filename=friend8.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend8 }}">{{user.friend8}}</a></li>
             {% endif %}
             {% if user.friend9 != "" %}
-                <li><a href="/users/{{ user.friend9 }}">{{user.friend9}}</a></li>
+                <li><img src="{{url_for('static', filename=friend9.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend9 }}">{{user.friend9}}</a></li>
             {% endif %}
             {% if user.friend10 != "" %}
-                <li><a href="/users/{{ user.friend10 }}">{{user.friend10}}</a></li>
+                <li><img src="{{url_for('static', filename=friend10.avatarImage)}}" class="img-circle" height="55" width="55" alt="Avatar"><a href="/users/{{ user.friend10 }}">{{user.friend10}}</a></li>
             {% endif %}
         </ul>
     </body>

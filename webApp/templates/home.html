@@ -113,6 +113,10 @@
             <span class="label label-danger">{{user.interest17}}</span>
             {% endif %} {% if user.interest18 != None %}
             <span class="label label-danger">{{user.interest18}}</span>
+            {% endif %} 
+            <!-- Custom Interest-->
+            {% if user.interest19 != None %}
+            <span class="label label-info">{{user.interest19}}</span>
             {% endif %}
             </p>
        </div>
@@ -132,7 +136,7 @@
       </div>
       <h2>Friend Statuses</h2>
       <div id="" style="overflow:auto; height:500px;">
-        {% if friend1 != None  %}
+        {% if user.friend1 != ""  %}
         <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -160,10 +164,10 @@
           </div>
         </div>
         {% endif %}
-        {% if friend1 == None  %}
+        {% if user.friend1 == "" %}
           <p>Looks like you need to get more friends, check your matches!</p>
         {% endif %}
-        {% if friend2 != None  %}
+        {% if user.friend2 != "" %}
         <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -191,7 +195,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend3 != None  %}
+        {% if user.friend3 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -219,7 +223,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend4 != None  %}
+        {% if user.friend4 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -247,7 +251,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend5 != None  %}
+        {% if user.friend5 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -272,7 +276,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend6 != None  %}
+        {% if user.friend6 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -297,7 +301,7 @@
           </div>
         </div>
         {% endif %}
-         {% if friend7 != None  %}
+         {% if user.friend7 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -322,7 +326,7 @@
           </div>
         </div>
         {% endif %}
-         {% if friend8 != None  %}
+         {% if user.friend8 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -347,7 +351,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend9 != None  %}
+        {% if user.friend9 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">
@@ -372,7 +376,7 @@
           </div>
         </div>
         {% endif %}
-        {% if friend10 != None  %}
+        {% if user.friend10 != ""  %}
          <div class="row">
           <div class="col-sm-3">
             <div class="well">

@@ -1,40 +1,36 @@
 <!DOCTYPE html>
 <html>{% extends "layout.html" %} {% block body %}
-
+    
 <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8"> 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    
     <title>Login</title>
-
+   
     <style>
-        body,
-        html {
+        body, html{
             height: 100%;
             width: 100%;
             margin: 0;
             padding: 0;
-            /* background: #36454f;*/
+            background: #36454f;
         }
-
-        #login {
+        #login{
             margin: 0;
             position: absolute;
             top: 50%;
             left: 70%;
             transform: translate(-50%, -50%);
         }
-
-        #textcol {
-            position: relative;
+        #textcol{
+            position:relative;
             opacity: 1;
             color: white;
             z-index: 1;
             text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
         }
-
-        #about {
-            padding-right: 15px;
+        #about{
+           padding-right: 15px;
             padding-left: 15px;
             margin: 0;
             position: absolute;
@@ -42,8 +38,7 @@
             left: 30%;
             transform: translate(-50%, -50%);
         }
-
-        .container-fluid {
+        .container-fluid{
             padding-right: 15px;
             padding-left: 15px;
             margin: 0;
@@ -52,16 +47,12 @@
             left: 60%;
             transform: translate(-50%, -50%);
         }
-
-        body {
+         body {
             margin: 0px;
             overflow-x: hidden;
         }
-
         .bgscroller img:nth-of-type(1) {
-            position: absolute;
             width: 20vw;
-
             position: relative;
             top: 50%;
             -webkit-transform: translateY(-50%);
@@ -69,7 +60,6 @@
             -o-transform: translateY(-50%);
             transform: translateY(-50%);
         }
-
         .bgscroller {
             width: 100vw;
             height: 100vh;
@@ -80,7 +70,6 @@
             /* Adjust timing here according to speed required */
             position: fixed;
         }
-
         @-webkit-keyframes backgroundScroll {
             from {
                 background-position: 0 0;
@@ -89,7 +78,6 @@
                 background-position: -99999999px 0;
             }
         }
-
         @keyframes backgroundScroll {
             from {
                 background-position: 0 0;
@@ -103,40 +91,42 @@
 
 <body>
     <div class="bgscroller">
-        <div id="about">
-            <div id="textcol">
-                <h2>Welcome to Team Me Up Scotty!</h2>
-                </br>
-                The web app designed to connect you </br>
-                with others that share similar insterests.
-            </div>
+    <div id="about">
+        <div id="textcol">
+            <h2>Welcome to Team Me Up Scotty!</h2></br>
+            The web app designed to connect you </br>
+            with others that share similar insterests.
         </div>
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-12 col-md-offset-4">
-                    {% with messages = get_flashed_messages() %} {% if messages %} {% for message in messages %}
-                    <div id="textcol">{{ message }}</div>
-                    {% endfor %} {% endif %} {% endwith %}
-                    <form method=POST action="{{ url_for('login') }}">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1" id="textcol">Username</label>
-                            <input type="text" class="form-control" name="username" placeholder="Username">
-                        </div>
-                        <div class="form-group">
-                            <label for="exampleInputPassword1" id="textcol">Password</label>
-                            <input type="password" class="form-control" name="pass" placeholder="Password">
-                        </div>
-                        <button type="submit" class="btn btn-primary btn-block">Log In</button>
-                    </form>
-                    <br>
-                    <div id="textcol">
-                        Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 col-md1offset-4">
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div id="textcol">{{ message }}</div>
+                        {% endfor %}
+                    {% endif %}
+                {% endwith %}
+                <form method=POST action="{{ url_for('login') }}">
+                    <div class="form-group">
+                        <label for="exampleInputEmail1" id="textcol">Username</label>
+                        <input type="text" class="form-control" name="username" placeholder="Username">
                     </div>
+                    <div class="form-group">
+                        <label for="exampleInputPassword1" id="textcol">Password</label>
+                        <input type="password" class="form-control" name="pass" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Log In</button>
+                </form>
+                <br>
+                <div id="textcol">
+                    Don't have an account? <a href="{{ url_for('register') }}">Sign up here</a>.
                 </div>
             </div>
         </div>
     </div>
+    </div>
 </body>
-
 </html>
 {% endblock %}

@@ -60,7 +60,11 @@ body{
         <p><a href="#">{{ user.name }}</a></p>
         <img src="{{url_for('static', filename=user.avatarImage)}}" class="img-circle" height="120" width="120" alt="Avatar">
       </div>
+      {% if removableFriend == "" %}
       <p><a href="{{ url_for('addfriend', userToAdd=user.name) }}">Add {{user.name}}</a></p>
+      {% else %}
+      <p><a href="{{ url_for('removefriend', friendToRemove=removableFriend) }}">Remove {{user.name}}</a></p>
+      {% endif %}
       {% if user.profileDescription != "" %}
       <div class="well">
         <p>{{user.profileDescription}}</p>
@@ -188,13 +192,32 @@ body{
                     </div>
                 </div>
             </div>
+               <div class="card">
+                <div class="card-header" id="headingFive">
+                    <h5 class="mb-0">
+                        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
+          Custom Interests
+        </button>
+                    </h5>
+                </div>
+                <div id="collapseFive" class="collapse" aria-labelledby="headingFive" data-parent="#accordion">
+                    <div class="card-body">
+                        {% if user.interest19 != None %}
+                        <ul>{{user.interest19}}</ul>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
     <div class="col-sm-3 well"  style="width: 700; max-width: 700; margin-left: 0 auto">
      {% if twitterUserLink != None %}
           <a class="twitter-timeline" href={{twitterUserLink}} data-height = "500" data-width = "450">Tweets by {{twitterUser}}</a> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
-      {% endif %}
+     {% endif %}
+    {% if twitterUserLink == None %}
+        <p>This user hasn't connected their twitter</p>
+    {% endif %}
     </div>
   </div>
 </div>

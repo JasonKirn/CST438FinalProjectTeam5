@@ -86,7 +86,37 @@ def hello():
 
 @app.route('/friendlist')
 def friendlist():
-    return render_template('friendList.html', user=getUser(session['username']));
+    user = getUser(session['username'])
+    friend1 = getUser(user["friend1"])
+    friend2 = getUser(user["friend2"])
+    friend3 = getUser(user["friend3"])
+    friend4 = getUser(user["friend4"])
+    friend5 = getUser(user["friend5"])
+    friend6 = getUser(user["friend6"])
+    friend7 = getUser(user["friend7"])
+    friend8 = getUser(user["friend8"])
+    friend9 = getUser(user["friend9"])
+    friend10 = getUser(user["friend10"])
+    return render_template('friendList.html', user=user,friend1 = friend1,friend2 = friend2, friend3 = friend3,friend4 = friend4, friend5 = friend5, friend6 = friend6, friend7 = friend7, friend8 = friend8, friend9 = friend9, friend10 = friend10)
+
+@app.route('/removefriend/<friendToRemove>')
+def removefriend(friendToRemove):
+    print(friendToRemove)
+    #remove session user on friend
+    user = getUser(session['username'])
+    rmFriendName = user[friendToRemove]
+    print("foo:")
+    print(rmFriendName)
+    rmFriend=getUser(rmFriendName)
+    for i in range(1,11):
+        friendStr = 'friend'+str(i)
+        if(rmFriend[friendStr]==session['username']):
+            updateEntry(rmFriendName, friendStr, "")
+            print("removing"+rmFriend[friendStr])
+            break
+    #remove friend on session user
+    updateEntry(session['username'], friendToRemove, "")
+    return redirect(url_for('user', siteUser = rmFriendName))
 
 @app.route('/acceptrequest/<notification>')
 def acceptrequest(notification):
@@ -114,6 +144,7 @@ def acceptrequest(notification):
             otherUserFullFriendList = True
             
     if otherUserFullFriendList == True:
+        print("Full other user friendlist")
         flash("Cannot add friend. " + otherUserName + "'s friend list is full.")
         return redirect(url_for('notifications'))
         
@@ -132,16 +163,18 @@ def acceptrequest(notification):
     
     if userFullFriendList == True:
         flash("Cannot add friend. Your friend list is full.")
+        print("Full friend list")
         return redirect(url_for('notifications'))
         
+    print(otherUserFriendSlot)
+    print(userFriendSlot)
     updateEntry(session['username'], notification, "")
-    updateEntry(session['username'], userFriendSlot, otherUserName)
-    updateEntry(otherUserName, otherUserFriendSlot, session['username'])
+    updateEntry(session['username'], otherUserFriendSlot, otherUserName)
+    updateEntry(otherUserName, userFriendSlot, session['username'])
     return redirect(url_for('notifications'))
 
 @app.route('/declinerequest/<notification>')
 def declinerequest(notification):
-    users = mongo.db.siteUsers
     updateEntry(session['username'], notification, "")
     return redirect(url_for('notifications'))
 
@@ -270,7 +303,16 @@ def user(siteUser):
         if siteUser == sessionUserName:
             return render_template('sessionUser.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
         else:
-            return render_template('user.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink)
+            sessionUser=getUser(session['username'])
+            for x in range(1, 11):
+                friendString = 'friend' + str(x)
+                print(selectedUser['name'])
+                print(sessionUserName)
+                if(selectedUser['name']==sessionUser[friendString]):
+                    return render_template('user.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink, removableFriend=friendString)    
+                    break 
+            print("foo")
+            return render_template('user.html', user=selectedUser, posts=posts, twitterUser = twitterUser,twitterUserLink = twitterUserLink, removableFriend="")
 
     return "Uh oh. The user page you're looking for doesn't seem to exist."
 
@@ -317,7 +359,7 @@ def register():
         existingUser = getUser(request.form['username'])
         if existingUser is None:
             if (len(request.form['pass'].encode('utf-8')) < 5):
-                flash('Password is too short!')
+                flash('Password must be longer than 5 characters')
                 return redirect(url_for('register'))
             if (hasNumbers(request.form['pass'].encode('utf-8')) == False):
                 flash('Password requires a number')
@@ -333,7 +375,8 @@ def register():
             for i in range(1,11):
                 setNotification(userName,i,'')
             return redirect(url_for('editprofile'))
-        return 'Username already exists'
+        flash('Username already exists')
+        return redirect(url_for('register'))
     #request.method is GET
     return render_template('register.html')
 
@@ -362,7 +405,7 @@ def editprofile():
         #2. If a field isn't filled out, it will be 'something' : null in DB
         #3. can also maybe use find_one_and_update with pymongo 2.9 or above
         userName = session['username']
-        for i in range(1,19):
+        for i in range(1,20):
             setInterest(userName, i, request.form.get('interest'+str(i)))
         updateEntry(userName, 'profileDescription', request.form.get('profileDescription'))
         
